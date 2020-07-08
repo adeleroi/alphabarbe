@@ -12,7 +12,7 @@ const routes = [
     props: true
   },
   {
-    path: "/article/:slug",
+    path: "/article/:slug/:id",
     name: "Article",
     props: true,
     component: () =>

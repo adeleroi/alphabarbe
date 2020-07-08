@@ -7,7 +7,7 @@
         :id="prod.id">
         <router-link :to="{
           name: 'Article',
-          params: {slug: prod.name+prod.prodId},
+          params: {slug: prod.name, id:prod.prodId},
           query: {}
         }">
           <p class="products-name">{{prod.name}}</p>

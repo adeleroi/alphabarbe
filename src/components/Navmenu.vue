@@ -22,7 +22,6 @@ export default {
     name: "Navmenu",
     data(){
         return{
-          dat: 0
         }
     },
     computed: {

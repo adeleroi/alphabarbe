@@ -2,7 +2,7 @@
   <div class="cart">
     <h1 class="cart-title">Welcome to the cart</h1>
     <ul class="cart-list">
-      <li class="cart-item" v-for="item in dat" :key="item.id">{{item.name}}</li>
+      <li class="cart-item" v-for="product in products" :key="product.prodId">{{product.name}}</li>
     </ul>
 
     <div class="cart-total-checkout">
@@ -14,13 +14,16 @@
 </template>
 
 <script>
-import { mapGetters} from 'vuex'
+import { mapGetters, mapState} from 'vuex'
 export default {
     name: "Cart",
     data(){
       return {
-        dat: this.$root.tempCart,
+        products: this.cart,
       }
+    },
+    methods:{
+      ...mapState(['cart'])
     },
     computed:{
       ...mapGetters({
@@ -33,5 +36,7 @@ export default {
 </script>
 
 <style>
-
+.cart{
+  background-color: #f5f5f7;
+}
 </style>

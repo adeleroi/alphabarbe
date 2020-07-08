@@ -1,10 +1,10 @@
 <template>
   <div class="article">
       <!-- <h1 class="article-info">
-          {{slug}}
+          {{ID}}
       </h1> 
-      v-bind:productId="productName" -->
-      <Product/>
+      <p> {{slug}}</p> -->
+      <Product v-bind:productId="ID"/>
   </div>
 </template>
 
@@ -20,11 +20,16 @@ export default {
             type: String,
             required: true
         },
+        id:{
+            type: String,
+            required: true
+        }
         
     },
     data(){
         return {
-            // productName: this.slug,
+            
+            ID: this.id
         }
     },
     computed:{

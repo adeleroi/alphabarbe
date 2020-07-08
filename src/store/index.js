@@ -18,7 +18,13 @@ export default new Vuex.Store({
         currentState.articles.push(payload);
     },
     fetchCart(currentState, payload){
-        currentState.cart.push(payload);
+        const found = currentState.cart.find(el => el.prodId === payload.prodId);
+        console.log('found', found);
+        if(!found){
+            currentState.cart.push(payload);
+        }else{
+            found.qty = payload.qty;
+        }
     },
     updateCart(currentState, info){
       currentState.cartStatus = info;
@@ -144,6 +150,7 @@ export default new Vuex.Store({
             rawDocs.forEach(rawDoc => {
                 if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
                     let val = rawDoc.doc.data();
+                    console.log(rawDoc.doc.id)
                     const documentId = rawDoc.doc.id;
                     val = {
                         ...val,

@@ -31,7 +31,7 @@ new Vue({
   computed: {
     ...mapState(['articles', 'cart']),
   },
-  mounted(){
+  created(){
     this.retrieveAll();
   }
 }).$mount("#app");

@@ -1,13 +1,13 @@
 <template>
 <div class="product-container">
-      <div class="product reviewcart" v-if="showReview">
+      <div class="product reviewcart" v-if="showReviewCart">
           <div class="product-image review-image">
-              <img src="../assets/logo.png" alt="" class="image review">
+              <img src="../assets/iphone.png" alt="" class="image review">
           </div>
           <div class="product-detail review-detail">
             <div class="product-name-price review-name-price">
                 <h2 class="product-type-name review-type-name">Huile a barbe</h2>
-                <h1 class="product-name review-name">The SheaButter Oil</h1>
+                <h1 class="product-name review-name">{{product.name}}</h1>
                 <p class="product-price review-price" align="left">${{product.price}}</p>
             </div>
           </div>
@@ -23,12 +23,12 @@
   <div class="product">
       <div class="product-image-description">
           <div class="product-image">
-              <img src="../assets/logo.png" alt="" class="image">
+              <img src="../assets/iphone.png" alt="" class="image">
           </div>
           <div class="product-detail">
             <div class="product-name-price">
               <h2 class="product-type-name">Huile a barbe</h2>
-              <h1 class="product-name">The SheaButter Oil</h1>
+              <h1 class="product-name">{{product.name}}</h1>
               <p class="product-price" align="left">${{product.price}}</p>
             </div>
             <div class="product-size">
@@ -42,7 +42,7 @@
             <div class="product-quantity-addtocart">
                 <div class="product-quantity">
                     <!-- <label for="">Qty: </label> -->
-                    <select name="" id="product-cart-item-quantity" v-model="qty">
+                    <select id="product-cart-item-quantity" v-model="qty">
                         <option >1</option>
                         <option >2</option>
                         <option >3</option>
@@ -84,7 +84,7 @@ export default {
     data(){
         return {
             qty: 1,
-            showReview: this.showReviewCart,
+            showReviewCart: false,
         }
     },
     props:{
@@ -97,9 +97,11 @@ export default {
                 ...article,
                 qty: this.qty,
             }
-            const find = this.cart.find(el => {
-                el.id == article.id;
-            })
+            console.log(this.cart, article.prodId);
+            const find = this.cart.find(el => 
+                el.prodId === article.prodId
+            )
+            console.log('find', find);
             if(!Cookies.get('collectionId')){
                 const collectionId = uuidv4();
                 dbase.collection(collectionId).add(article).then(x => {
@@ -110,12 +112,12 @@ export default {
             }else{
                 if(!find){
                     dbase.collection(Cookies.get('collectionId')).add(article).then(x => {
-                        console.log('addToCart: ',x);
+                        console.log('addToCart: ', x);
                     })
                 }else{
                     dbase.collection(Cookies.get('collectionId'))
-                    .doc(this.product.id).update({
-                        qty: this.qty
+                    .doc(find.documentId).update({
+                        qty: Number(this.qty)
                     })
                 }
             }
@@ -123,7 +125,7 @@ export default {
         }
     },
     computed:{
-        ...mapState(['articles', 'cart', 'showReviewCart']),
+        ...mapState(['articles', 'cart']),
         product(){
             return this.articles.find(el => el.prodId == this.productId);
         },
@@ -158,6 +160,7 @@ export default {
 }
 .product-name{
     margin-top: 0;
+    display: flex;
 }
 .product-name-price{
     display: grid;
@@ -190,7 +193,10 @@ export default {
     align-self: center;
 }
 .product-addtocart-btn{
-    background-color: black;
+    /* background-color: black; */
+    background-color:grey;
+    background:linear-gradient(#939597,#444546);
+    border: 0.5px solid #939597;
     width: 150px;
     height: 60px;
     color: white;
@@ -238,9 +244,14 @@ export default {
     display: flex;
     align-self: center;
     width: 150px;
-    height: 25px;
+    height: 28px;
     font-size: 14px;
     margin-left: 60px;
+    background-color:grey;
+    background:linear-gradient(#939597,#444546);
+    border: 0.5px solid #939597;
+    border-radius: 5px;
+
 }
 .product-addtoCartd-msg.review-msg{
     display: flex;
