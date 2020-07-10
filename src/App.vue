@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <div id="nav">
+    <!-- <div id="nav"> -->
       <Navmenu/>
-    </div>
+    <!-- </div> -->
     <router-view />
+    <Footer/>
   </div>
 </template>
 <script>
 import Navmenu from "./components/Navmenu.vue"
+import Footer from "./components/Footer.vue"
 export default {
   components:{
     Navmenu,
+    Footer
   }
 }
 </script>
@@ -21,10 +24,17 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
 }
-html, body{
+// *{
+//   margin:0;
+//   box-sizing: border-box;
+// }
+
+html,body{
   margin:0;
   box-sizing: border-box;
+  // height: 100%;
 }
 
 </style>

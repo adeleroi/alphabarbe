@@ -70,7 +70,7 @@ export default new Vuex.Store({
     },
 
     removeOneProductFromCart(currentState, item){
-        currentState.cart = currentState.cart.filter(el => el.id != item.id);
+        currentState.cart = currentState.cart.filter(el => el.prodId != item.prodId);
     }
   },
 
@@ -89,6 +89,12 @@ export default new Vuex.Store({
             return 0;
         }
         return state.cart.reduce((acc, curr) => acc + curr.qty * curr.price, 0);
+    },
+    getTaxTvq(state, getters){
+        return Number.parseFloat(getters.getCartTotal * 0.09975).toFixed(2);
+    },
+    getTaxTps(state, getters){
+        return Number.parseFloat(getters.getCartTotal * 0.05).toFixed(2);
     },
     getCartItems(state){
         if(!state.cart.length){

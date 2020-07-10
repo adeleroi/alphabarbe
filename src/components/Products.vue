@@ -1,5 +1,5 @@
 <template>
-  <div class="Products">
+  <div class="products">
     <ul class="products-list">
       <li class="products-item"
         v-for="prod in products"
@@ -40,6 +40,13 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-
+<style>
+.products{
+  min-height: 523px;
+}
+.products-list{
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+}
 </style>

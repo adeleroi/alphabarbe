@@ -42,7 +42,7 @@
             <div class="product-quantity-addtocart">
                 <div class="product-quantity">
                     <!-- <label for="">Qty: </label> -->
-                    <select id="product-cart-item-quantity" v-model="qty">
+                    <select id="product-cart-item-quantity" v-if="false">
                         <option >1</option>
                         <option >2</option>
                         <option >3</option>
@@ -117,7 +117,7 @@ export default {
                 }else{
                     dbase.collection(Cookies.get('collectionId'))
                     .doc(find.documentId).update({
-                        qty: Number(this.qty)
+                        qty: Number(find.qty + this.qty)
                     })
                 }
             }
@@ -193,7 +193,6 @@ export default {
     align-self: center;
 }
 .product-addtocart-btn{
-    /* background-color: black; */
     background-color:grey;
     background:linear-gradient(#939597,#444546);
     border: 0.5px solid #939597;
@@ -202,10 +201,8 @@ export default {
     color: white;
     display: flex;
     justify-content: center;
-    /* padding-top: 20px; */
     border-radius: 10px;
     cursor: pointer;
-    /* margin-left: 25px; */
 }
 .product-addtoCartd-msg{
     display: flex;
