@@ -5,37 +5,41 @@
       <div class="cart-total-checkout">
         <p class="cart-total" v-if="getTotal">${{bagTotal}}</p>
         <p class="cart-total msge" v-else>The cart is empty</p>
-        <button class="cart-checkout-btn" v-if="getTotal">checkout</button>
+        <button class="cart-checkout-btn" v-if="getTotal" @click="checkoutRedirect">checkout</button>
       </div>
     </div>
     <div class="cart-products-presentation">
       <ul class="cart-products">
-        <li class="cart-product" v-for="product in cart" :key="product.prodId">
-          <div class="cart-container" v-if="product.prodId">
-            <div class="cart-product-presentation">
-                  <!-- <h2 class="cart-product-type-name">Huile a barbe</h2> -->
-                <div class="cart-product-image">
-                    <img src="../assets/iphone.png" class="cart-img">
+        <transition-group name="listtransition" tag="p">
+          <li class="cart-product" v-for="product in cart" :key="product.prodId">
+            <div class="cart-container" v-if="product.prodId">
+              <div class="cart-product-presentation">
+                  <div class="cart-product-image">
+                      <img :src="product.url" class="cart-img">
+                  </div>
+                  <div class="cart-product-name">
+                    <h1 align="left">{{product.name}}</h1>
+                    <h2 align="left">{{product.description}}</h2>
+                  </div>
+              </div>
+              <div class="cart-management">
+                <div class="cart-option">
+                  <select id="cart-item-quantity" v-model="product.qty" @change="addCart(product)">
+                      <option disabled value="" >{{product.qty}}</option>
+                      <option >1</option>
+                      <option >2</option>
+                      <option >3</option>
+                      <option >4</option>
+                  </select>
+                  <p class="cart-product-price" align="right">${{product.price * product.qty}}</p>
                 </div>
-                  <h1 class="cart-product-name">{{product.name}}</h1>
-            </div>
-            <div class="cart-management">
-              <div class="cart-option">
-                <select id="cart-item-quantity" v-model="qty" @change="addCart(qty, product)">
-                    <option disabled value="" >{{product.qty}}</option>
-                    <option >1</option>
-                    <option >2</option>
-                    <option >3</option>
-                    <option >4</option>
-                </select>
-                <p class="cart-product-price" align="right">${{product.price * product.qty}}</p>
-              </div>
-              <div class="cart-remove-btn">
-                <span class="cart-product-remove" @click="remove(product)">Remove</span>
+                <div class="cart-remove-btn">
+                  <span class="cart-product-remove" @click="remove(product)">Remove</span>
+                </div>
               </div>
             </div>
-          </div>
-        </li>
+          </li>
+        </transition-group>
       </ul>
     </div>
     <div class="cart-total-container" v-if="getTotal">
@@ -70,25 +74,28 @@ import Cookies from "js-cookie"
 import dbase from '../assets/firebaseConfig/firebaseInit'
 import "firebase/database"
 import {v4 as uuidv4} from 'uuid'
+/* eslint-disable no-undef */
+const stripe = Stripe("pk_test_dBcdfrU9L796gmsYfemRUozd00g7LiJ4CS")
+/* eslint-enable no-undef */
 export default {
     name: "Cart",
     data(){
       return {
         qty: '',
-        tps: 0.05,
-        tvq: 0.09975,
+
       }
     },
     methods:{
-      ...mapMutations(['removeOneProductFromCart']),
-      addCart(quant, prod){
+      ...mapMutations(['removeOneProductFromCart', 'CartItems']),
+
+      addCart(prod){
           let article = prod;
           article = {
               ...article,
-              qty: Number(quant),
+              qty: Number(article.qty),
           }
           console.log(this.cart, article.prodId);
-          const find = this.cart.find(el => 
+          const find = this.cart.find(el =>
               el.prodId === article.prodId
           )
           console.log('find', find);
@@ -107,7 +114,7 @@ export default {
               }else{
                   dbase.collection(Cookies.get('collectionId'))
                   .doc(find.documentId).update({
-                      qty: Number(quant)
+                      qty: Number(article.qty)
                   })
               }
           }
@@ -121,27 +128,64 @@ export default {
         .doc(found.documentId).delete();
         this.removeOneProductFromCart(prod);
         
+      },
+      checkoutSessionAndPayment(){
+        console.log(this.getCartItems);
+        const promesse = fetch("http://localhost:3000/create-checkout-session", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.getCartItems)
+        })
+        .then(x => {
+          return x.json();
+        })
+        return promesse;
+      },
+      checkoutRedirect(){
+        this.checkoutSessionAndPayment().then(data => {
+          console.log(data.sessionId);
+          stripe.redirectToCheckout({
+            sessionId: data.sessionId
+          });
+        })
       }
     },
     computed:{
       ...mapGetters({
         getTotal: "getCartTotal",
         getTaxTvq: "getTaxTvq",
-        getTaxTps: "getTaxTps"
+        getTaxTps: "getTaxTps",
+        getCartItems: "getCartItems"
       }),
       ...mapState(['cart']),
       bagTotal(){
-        return Number.parseFloat(this.getTotal + Number(this.getTaxTvq) + Number(this.getTaxTvq)).toFixed(2);
+        return Number.parseFloat(this.getTotal + Number(this.getTaxTps) + Number(this.getTaxTvq)).toFixed(2);
       }
-
-    }
-    
+    },
 }
 </script>
 
 <style>
+.listtransition-enter{
+  transition: all ease-in .1s;
+}
+.listtransition-leave-active {
+  opacity: 0;
+  transition: all ease-in 1s;
+}
+.listtransition-leave-active .cart-img {
+  transition: all ease-in .3s;
+  opacity: 0;
+}
+.listtransition-leave-active .cart-product-name {
+  transition: all ease-in .3s;
+  opacity: 0;
+}
 .cart{
   min-height: 522px;
+  margin-top: 60px;
 }
 .cart-total{
   font-weight: bold;
@@ -151,18 +195,18 @@ export default {
   margin-top: 30px;
 }
 .cart-checkout-btn{
-    background-color:grey;
-    /* #444546 */
-    background:linear-gradient(#939597,#ce1a0d);
-    border: 0.5px solid #939597;
+    background-color:#0077ed;
+    /* background:linear-gradient(#939597,#ce1a0d); */
+    border: 0.5px solid #0077ed;
     width: 120px;
     height: 50px;
     color: white;
     font-size: 20px;    
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 8px;
+    /* border: 10px solid linear-gradient(#939597,#ce1a0d); */
     cursor: pointer;
-  margin-bottom: 50px;
+    margin-bottom: 50px;
 }
 .cart-products-presentation{
   margin-left: 10%;
@@ -174,6 +218,7 @@ export default {
 }
 .cart-product{
   border-bottom: 1px solid #d6d6d6;
+
 
 }
 .cart-option{
@@ -233,16 +278,9 @@ export default {
 
 }
 .cart-img{
-  width: 200px;
-  height: 200px;
+  width: 130px;
+  height: 220px;
 }
-/* .cart-subtotal-value{
-
-}
-.cart-taxes{
- 
-}
-*/
 .cart-taxes-tvq{
   display: flex;
   justify-content: space-between;
@@ -273,9 +311,6 @@ export default {
   font-size: 30px;
   font-weight: bold;
 }
-/* .cart-total-title{
-
-} */
 .space{
   margin-bottom: 15px;
 }

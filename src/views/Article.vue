@@ -1,9 +1,5 @@
 <template>
-  <div class="article">
-      <!-- <h1 class="article-info">
-          {{ID}}
-      </h1> 
-      <p> {{slug}}</p> -->
+  <div class="article-container">
       <Product v-bind:productId="ID"/>
   </div>
 </template>

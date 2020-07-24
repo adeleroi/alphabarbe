@@ -17,24 +17,24 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style>
 #app {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica Neue,Ubuntu,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   height: 100%;
 }
-// *{
-//   margin:0;
-//   box-sizing: border-box;
-// }
+ /* *{
+   margin:0;
+   box-sizing: border-box;
+ } */
 
 html,body{
   margin:0;
   box-sizing: border-box;
-  // height: 100%;
+  /* height: 100%; */
 }
 
 </style>

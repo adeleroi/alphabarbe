@@ -68,10 +68,9 @@ export default new Vuex.Store({
             currentState.cart.splice(index, 1);
         }
     },
-
     removeOneProductFromCart(currentState, item){
         currentState.cart = currentState.cart.filter(el => el.prodId != item.prodId);
-    }
+    },
   },
 
   getters:{
@@ -96,20 +95,19 @@ export default new Vuex.Store({
     getTaxTps(state, getters){
         return Number.parseFloat(getters.getCartTotal * 0.05).toFixed(2);
     },
-    getCartItems(state){
-        if(!state.cart.length){
+    getCartItems(currentState){
+        if(!currentState.cart.length){
             return []
         }
-        return state.cart;
-        // state.cart.map(item => {
-        //     return {
-        //         id: item.id,
-        //         quantity: item.qty,
-        //         amount: item.price,
-        //         name: item.name,
-        //         description: item.description
-        //     };
-        // });
+        return currentState.cart.map(item => {
+            return {
+                "quantity": Number(item.qty),
+                "amount": Number.parseInt(item.price * 100 * (1.14975)),
+                "name": item.name,
+                "description": item.description,
+                "currency": "usd",
+            };
+        });
     }
   },
 

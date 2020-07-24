@@ -1,33 +1,13 @@
 <template>
 <div class="product-container">
-      <div class="product reviewcart" v-if="showReviewCart">
-          <div class="product-image review-image">
-              <img src="../assets/iphone.png" alt="" class="image review">
-          </div>
-          <div class="product-detail review-detail">
-            <div class="product-name-price review-name-price">
-                <h2 class="product-type-name review-type-name">Huile a barbe</h2>
-                <h1 class="product-name review-name">{{product.name}}</h1>
-                <p class="product-price review-price" align="left">${{product.price}}</p>
-            </div>
-          </div>
-          <div class="product-addtocart-btn review-btn">
-              <router-link :to="{
-                  name: 'Cart',
-                  params: {slug: productId}
-              }" class="product-review-link">
-              <span class="product-addtoCartd-msg review-msg">Review Cart</span>
-              </router-link>
-          </div>
-      </div>
   <div class="product">
       <div class="product-image-description">
           <div class="product-image">
-              <img src="../assets/iphone.png" alt="" class="image">
+              <img :src="product.url" alt="" class="image">
           </div>
           <div class="product-detail">
             <div class="product-name-price">
-              <h2 class="product-type-name">Huile a barbe</h2>
+              <h2 class="product-type-name">{{product.description}}</h2>
               <h1 class="product-name">{{product.name}}</h1>
               <p class="product-price" align="left">${{product.price}}</p>
             </div>
@@ -36,7 +16,7 @@
                 <ul class="item-list-size">
                     <li class="item-size">120 ml</li>
                     <li class="item-size">300 ml</li>
-                    <li class="item-size">550ml</li>
+                <li class="item-size">550ml</li>
                 </ul>
             </div>
             <div class="product-quantity-addtocart">
@@ -122,6 +102,7 @@ export default {
                 }
             }
             this.showReviewCart = true;
+            this.$router.push(`/categories/${article.name}/${article.prodId}`)
         }
     },
     computed:{
@@ -134,6 +115,9 @@ export default {
 </script>
 
 <style>
+.product-container{
+    margin-top: 90px;
+}
 .product{
     display: flex;
     justify-content: center;
@@ -151,8 +135,8 @@ export default {
 
 }
 .image{
-    width: 350px;
-    height: 500px;
+    width: 220px;
+    height: 350px;
 }
 .product-type-name{
     display: flex;
@@ -193,12 +177,13 @@ export default {
     align-self: center;
 }
 .product-addtocart-btn{
-    background-color:grey;
-    background:linear-gradient(#939597,#444546);
-    border: 0.5px solid #939597;
+    background-color:yellow;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border: 2px solid purple;
     width: 150px;
-    height: 60px;
-    color: white;
+    height: 55px;
+    color: purple;
     display: flex;
     justify-content: center;
     border-radius: 10px;
@@ -223,31 +208,31 @@ export default {
 .product-image{
     border-bottom: 1px solid #d6d6d6;
 }
-.product-review-link{
+/* .product-review-link{
     text-decoration: none;
-    color: white;
 }
-/*----------------------*/
 .product.reviewcart{
     background-color: whitesmoke;
     width: 100%;
     height: 15%;
 }
 .image.review{
-    width: 74px;
+    width: 50px;
     height: 85px;
 }
 .product-addtocart-btn.review-btn{
-    display: flex;
-    align-self: center;
+
+    background-color:yellow;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border: 2px solid purple;
     width: 150px;
     height: 28px;
-    font-size: 14px;
-    margin-left: 60px;
-    background-color:grey;
-    background:linear-gradient(#939597,#444546);
-    border: 0.5px solid #939597;
+    color: purple;
+    display: flex;
+    align-self: center;
     border-radius: 5px;
+    cursor: pointer;
 
 }
 .product-addtoCartd-msg.review-msg{
@@ -269,5 +254,5 @@ export default {
 }
 .product-image.review-image{
     border-bottom: none;
-}
+} */
 </style>

@@ -18,7 +18,15 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "Article" */ "../views/Article.vue")
     
-    },
+  },
+  {
+    path: "/categories/:slug/:id",
+    name: "Categories",
+    props: true,
+    component: () =>
+      import(/* webpackChunkName: "Categories" */ "../views/Categories.vue")
+    
+  },
   {
     path: "/cart",
     name: "Cart",
@@ -35,6 +43,13 @@ const routes = [
     props: true,
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/success/:id",
+    name: "Success",
+    props: true,
+    component: () =>
+    import(/* webpackChunckName: "success" */ "../views/Success.vue")
   },
   {
     path: "*",

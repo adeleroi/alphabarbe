@@ -1,6 +1,11 @@
 <template>
   <div class="errorpage">
-      <h1>Error page</h1>
+    <h1 class="error-msg">It appears your web browser is drunk. Let's take it 
+      <router-link to="/" class="error-home">home.</router-link>
+      </h1>
+    <p class="error-explaination">
+        The URL may be misspelled or the page you're looking for is no longer available.
+    </p>
   </div>
 </template>
 
@@ -10,6 +15,21 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.errorpage{
+  min-height: 340px;
+}
+.error-msg{
+  margin-top: 15%;
+  font-size: 40px;
+  /* font-family: Robolo; */
+}
+.error-explaination{
+  font-size: 20px;
+  font-family: Robolo;
+}
+.error-home{
+  color: purple;
+  text-decoration: underline;
+}
 </style>
