@@ -6,9 +6,37 @@
             <span style="color:white;font-family:'Rock Salt', cursive; font-weight:normal;font-size: 24px">Drink</span>
             </router-link>
           </li>
-          <li class="nav-item">Products</li>
-          <li class="nav-item">Advise</li>
-          <li class="nav-item">Sign in</li>
+          <li class="nav-item">
+            <router-link :to="{
+              name: 'Articles',
+              params:{slug: 'vodka'}
+            }">
+              <span class="nav-item-msg">Vodka</span>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{
+              name: 'Articles',
+              params:{slug: 'whiskey'}
+            }">
+              <span class="nav-item-msg">Whiskey</span>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{
+              name: 'Articles',
+              params:{slug: 'gin'}
+            }">
+              <span class="nav-item-msg">Gin</span>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{
+              name: 'Signup',
+            }">
+              <span class="nav-item-msg">Sign up</span>
+            </router-link>
+          </li>
           <li class="nav-item nav-cart">
             <router-link to='/cart' class="nav-cart-link">
               <i class="icon-cart"></i>
@@ -34,23 +62,25 @@ export default {
 </script>
 
 <style>
-
 .navmenu{
+    position: fixed;
+    width: 100%;
+    top: 0;
     display: grid;
     justify-content: space-around;
-    /* background-color: #69977c; */
     background-color: purple;
-    /* margin-bottom: 70px; */
     font-family: Arial, Helvetica, sans-serif;
-
+    z-index: 2;
+    opacity: .9;
+    /* margin-bottom: 100px; */
 }
 .nav-items{
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
     min-width: 900px;
     height: 60px;
     color: white;
-    /* background-color: white; */
     background-color: purple;
     list-style: none;
     margin:0;
@@ -58,25 +88,27 @@ export default {
 }
 .nav-item{
     align-self: center;
+    cursor: pointer;
 }
+.nav-item-msg{
+  color:white;
+  opacity: 0.8;
+}
+.nav-item-msg:hover{
+  opacity: 1;
+}
+
 .nav-logo{
   font-size: 34px;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
   color: yellow;
 }
-/* .router-link-exact-active{
-  color: yellow;
 
-} */
 .icon-cart{
     cursor: pointer;
     color: white;
-    /* color: black; */
 }
-/* .nav-cart-link:active{
-    color: red;
-} */
 .nav-class-qty{
     border: 1px solid white;
     padding-top: 4px;
@@ -116,12 +148,10 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 .icon-home:before {
   content: "\e900";
 }
 .icon-cart:before {
   content: "\e93a";
 }
-
 </style>

@@ -20,6 +20,13 @@ const routes = [
     
   },
   {
+    path: "/articles/:slug",
+    name: "Articles",
+    props: true,
+    component: () =>
+      import(/* webpackChunkName: "Articles" */ "../views/Articles.vue")
+  },
+  {
     path: "/categories/:slug/:id",
     name: "Categories",
     props: true,
@@ -49,7 +56,13 @@ const routes = [
     name: "Success",
     props: true,
     component: () =>
-    import(/* webpackChunckName: "success" */ "../views/Success.vue")
+    import(/* webpackChunckName: "Success" */ "../views/Success.vue")
+  },
+  {
+    path: "/signup",
+    name: "Signup",
+    component: () =>
+      import(/* webpackChunckName: "Signup" */ "../views/Signup.vue")
   },
   {
     path: "*",
