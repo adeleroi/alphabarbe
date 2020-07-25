@@ -21,7 +21,6 @@
             </div>
             <div class="product-quantity-addtocart">
                 <div class="product-quantity">
-                    <!-- <label for="">Qty: </label> -->
                     <select id="product-cart-item-quantity" v-if="false">
                         <option >1</option>
                         <option >2</option>
@@ -29,9 +28,9 @@
                         <option >4</option>
                     </select>
                 </div>
-                <div class="product-addtocart-btn" @click="addCart">
+                <button class="product-addtocart-btn" @click="addCart">
                     <span class="product-addtoCartd-msg">ADD TO CART</span>
-                </div>
+                </button>
             </div>
             <div class="product-info">
                 <div class="product-description">
@@ -177,22 +176,23 @@ export default {
     align-self: center;
 }
 .product-addtocart-btn{
-    background-color:yellow;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    border: 2px solid purple;
-    width: 150px;
-    height: 55px;
-    color: purple;
-    display: flex;
-    justify-content: center;
-    border-radius: 10px;
-    cursor: pointer;
+  border: 0.5px solid #0077ed;
+  width: 180px;
+  height: 50px;
+  color: white;
+  font-size: 16px;    
+  justify-content: center;
+  border-radius: 8px;
+  background: linear-gradient(to right,#fdde5c,#f8ab5e,#f56a62,#a176c8,#759beb,#65beb3,#70db96);
+  border-radius: 25px;
+  cursor: pointer;
+  margin-bottom: 50px;
 }
 .product-addtoCartd-msg{
-    display: flex;
-    justify-self: center;
-    margin-top: 20px;
+  background: white;
+  border-radius: 25px;
+  padding: 12px 32px 12px 27px;
+  color: black;
 }
 #product-cart-item-quantity{
     border: none;
@@ -208,51 +208,4 @@ export default {
 .product-image{
     border-bottom: 1px solid #d6d6d6;
 }
-/* .product-review-link{
-    text-decoration: none;
-}
-.product.reviewcart{
-    background-color: whitesmoke;
-    width: 100%;
-    height: 15%;
-}
-.image.review{
-    width: 50px;
-    height: 85px;
-}
-.product-addtocart-btn.review-btn{
-
-    background-color:yellow;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    border: 2px solid purple;
-    width: 150px;
-    height: 28px;
-    color: purple;
-    display: flex;
-    align-self: center;
-    border-radius: 5px;
-    cursor: pointer;
-
-}
-.product-addtoCartd-msg.review-msg{
-    display: flex;
-    align-self: center;
-    margin-top: 4px;
-}
-.product-detail.review-detail{
-    margin-left: 20px;
-}
-.product-type-name.review-type-name{
-    font-size: 12px;
-}
-.product-name.review-name{
-    font-size: 12px;
-}
-.product-price.review-price{
-    font-size: 12px;
-}
-.product-image.review-image{
-    border-bottom: none;
-} */
 </style>

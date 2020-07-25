@@ -5,7 +5,9 @@
       <div class="cart-total-checkout">
         <p class="cart-total" v-if="getTotal">${{bagTotal}}</p>
         <p class="cart-total msge" v-else>The cart is empty</p>
-        <button class="cart-checkout-btn" v-if="getTotal" @click="checkoutRedirect">checkout</button>
+        <button class="cart-checkout-btn" v-if="getTotal" @click="checkoutRedirect">
+          <span class="checkout-btn-apple">checkout</span>
+          </button>
       </div>
     </div>
     <div class="cart-products-presentation">
@@ -194,9 +196,8 @@ export default {
 .cart-total.msge{
   margin-top: 30px;
 }
-.cart-checkout-btn{
+/* .cart-checkout-btn{
     background-color:#0077ed;
-    /* background:linear-gradient(#939597,#ce1a0d); */
     border: 0.5px solid #0077ed;
     width: 120px;
     height: 50px;
@@ -204,9 +205,27 @@ export default {
     font-size: 20px;    
     justify-content: center;
     border-radius: 8px;
-    /* border: 10px solid linear-gradient(#939597,#ce1a0d); */
     cursor: pointer;
     margin-bottom: 50px;
+} */
+.cart-checkout-btn{
+  border: 0.5px solid #0077ed;
+  width: 120px;
+  height: 50px;
+  color: white;
+  font-size: 20px;    
+  justify-content: center;
+  border-radius: 8px;
+  background: linear-gradient(to right,#fdde5c,#f8ab5e,#f56a62,#a176c8,#759beb,#65beb3,#70db96);
+  border-radius: 25px;
+  cursor: pointer;
+  margin-bottom: 50px;
+}
+.checkout-btn-apple{
+  background: white;
+  border-radius: 30px;
+  padding: 10px 17px 10px 12px;
+  color: black;
 }
 .cart-products-presentation{
   margin-left: 10%;

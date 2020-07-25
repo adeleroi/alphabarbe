@@ -1,22 +1,19 @@
 <template>
   <div class="footer-container">
       <div class="footer">
-          <!-- <div class="footer-image">
-              <img src="../assets/social/80311082_501825293803540_6568125080105123840_n.jpg" alt="" class="footer-img">
-          </div> -->
           <ul class="social-media">
               <li>
-                  <a href="https://www.instagram.com/alpha_barbe/" class="media" target ="_blank" rel="noopener noreferrer">
+                  <a href="https://www.instagram.com" class="media" target ="_blank" rel="noopener noreferrer">
                     <img src="../assets/social/instagram.3ab7002e.svg" alt="" class="media-img">
                   </a>
               </li>
               <li>
-                <a href="" class="media" target ="_blank" rel="noopener noreferrer">
+                <a href="https://www.facebook.com" class="media" target ="_blank" rel="noopener noreferrer">
                     <img src="../assets/social/facebook.abda975d.svg" alt="" class="media-img">
                 </a>
               </li>
               <li>
-                <a href="" class="media" target ="_blank" rel="noopener noreferrer">
+                <a href="https://twitter.com" class="media" target ="_blank" rel="noopener noreferrer">
                     <img src="../assets/social/twitter.dfc3ada2.svg" alt="" class="media-img">
                 </a>
               </li>
@@ -34,7 +31,6 @@ export default {
     }
 }
 </script>
-
 <style>
 .footer-container{
     bottom:0;

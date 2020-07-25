@@ -54,7 +54,6 @@ export default new Vuex.Store({
         const index = currentState.cart.findIndex(el => el.id == item.id);
         if(currentState[index].qty){
             currentState[index].qty ++;
-            // Modifier automatiquement dans firebase
         }else{
             currentState.cart.splice(index, 1);
         }

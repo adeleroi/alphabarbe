@@ -12,14 +12,14 @@
                 <p class="product-price review-price" align="left">${{product.price}}</p>
             </div>
         </div>
-        <div class="product-addtocart-btn review-btn">
+        <button class="categories-review-btn">
               <router-link :to="{
                   name: 'Cart',
                   params: {slug: prodID}
               }" class="product-review-link">
-              <span class="product-addtoCartd-msg review-msg">Review Cart</span>
+              <span class="categories-review-msg">Review Cart</span>
               </router-link>
-        </div>
+        </button>
     </div>
     <h1 class="categories-msg"> Different taste, same intensity</h1>
    <products :category="category"/>
@@ -47,7 +47,6 @@ export default {
     data(){
         return {
             prodID: this.id,
-
         }
     },
     computed:{
@@ -82,25 +81,26 @@ export default {
     width: 50px;
     height: 85px;
 }
-.product-addtocart-btn.review-btn{
 
-    background-color:yellow;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    border: 2px solid purple;
-    width: 150px;
-    height: 28px;
-    color: purple;
-    display: flex;
-    align-self: center;
-    border-radius: 5px;
-    cursor: pointer;
-
+.categories-review-btn{
+  display: flex;
+  align-self: center;
+  border: 0.5px solid #0077ed;
+  width: 139px;
+  height: 35px;
+  color: white;
+  font-size: 12px;    
+  justify-content: center;
+  border-radius: 35px;
+  background: linear-gradient(to right,#fdde5c,#f8ab5e,#f56a62,#a176c8,#759beb,#65beb3,#70db96);
+  cursor: pointer;
+  margin-bottom: 50px;
 }
-.product-addtoCartd-msg.review-msg{
-    display: flex;
-    align-self: center;
-    margin-top: 4px;
+.categories-review-msg{
+  background: white;
+  border-radius: 15px;
+  padding: 8px 30px 6px 30px;
+  color: black;
 }
 .product-detail.review-detail{
     margin: 0px 50px 0px 0px;

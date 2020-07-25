@@ -22,7 +22,6 @@ export default {
 .error-msg{
   margin-top: 15%;
   font-size: 40px;
-  /* font-family: Robolo; */
 }
 .error-explaination{
   font-size: 20px;
