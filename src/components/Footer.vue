@@ -33,6 +33,7 @@ export default {
 </script>
 <style>
 .footer-container{
+    /* position: absolute; */
     bottom:0;
     background-color: #69977c;
     width: 100%;

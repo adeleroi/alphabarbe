@@ -187,7 +187,7 @@ export default {
 }
 .cart{
   min-height: 522px;
-  margin-top: 60px;
+  margin-top: 100px;
 }
 .cart-total{
   font-weight: bold;

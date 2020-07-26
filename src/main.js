@@ -20,7 +20,7 @@ new Vue({
   },
   methods:{
     ...mapMutations(['addToCart']),
-    ...mapActions(['retrieveArticles', 'retrieveCart']),
+    ...mapActions(['retrieveArticles', 'retrieveCart', 'retrieveUsername']),
     retrieveAll(){
       this.retrieveArticles();
       if(Cookies.get('collectionId')){
@@ -33,5 +33,6 @@ new Vue({
   },
   created(){
     this.retrieveAll();
+    this.retrieveUsername();
   }
 }).$mount("#app");

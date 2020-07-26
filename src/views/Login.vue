@@ -1,16 +1,16 @@
 <template>
-  <div class="signup-container">
-    <credentials :login="true"/>
+  <div class="login-container">
+      <credentials :login="false"/>
   </div>
 </template>
 
 <script>
 import credentials from "../components/credentials"
 export default {
+    name: "Login",
     components:{
         credentials,
     }
-
 }
 </script>
 

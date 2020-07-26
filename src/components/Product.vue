@@ -12,12 +12,14 @@
               <p class="product-price" align="left">${{product.price}}</p>
             </div>
             <div class="product-size">
-                <h3 align="left" class="product-size-title">Size</h3>
-                <ul class="item-list-size">
+                <h3 align="left" class="product-size-title">Size:
+                    <span class="product-size-size">{{product.size}} ml</span>
+                </h3>
+                <!-- <ul class="item-list-size">
                     <li class="item-size">120 ml</li>
                     <li class="item-size">300 ml</li>
-                <li class="item-size">550ml</li>
-                </ul>
+                    <li class="item-size">550 ml</li>
+                </ul> -->
             </div>
             <div class="product-quantity-addtocart">
                 <div class="product-quantity">
@@ -32,7 +34,7 @@
                     <span class="product-addtoCartd-msg">ADD TO CART</span>
                 </button>
             </div>
-            <div class="product-info">
+            <!-- <div class="product-info">
                 <div class="product-description">
                     <div class="product-id">
                         <p align=left>Product: {{product.prodId}}</p>
@@ -45,7 +47,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div> -->
           </div>
       </div>
   </div>
@@ -115,13 +117,15 @@ export default {
 
 <style>
 .product-container{
-    margin-top: 90px;
+    /* display: flex;
+    justify-content: center; */
 }
 .product{
     display: flex;
     justify-content: center;
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
-    margin-top: 100px;
+    margin-top: 150px;
+    min-height: 532px;
 }
 .product-detail{
     margin-left: 100px;
@@ -165,7 +169,10 @@ export default {
     list-style: none;
 }
 .product-size-title{
-    margin-bottom: 0;
+    margin-bottom: 20px;
+}
+.product-size-size{
+    font-weight: normal;
 }
 .product-quantity-addtocart{
     display: flex;

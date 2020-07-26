@@ -2,6 +2,9 @@ import Vue  from "vue";
 import Vuex from "vuex";
 import dbStore from "../assets/firebaseConfig/firebaseInit"
 import "firebase/database"
+import firebase from "firebase/app"
+import "firebase/auth" 
+// import "firebase/firestore"
 import Cookies from 'js-cookie'
 Vue.use(Vuex);
 
@@ -12,6 +15,7 @@ export default new Vuex.Store({
   cartStatus: 'empty',
   sessionId: '',
   showReviewCart: false,
+  username: '',
   },
   mutations: {
     fetchArticles(currentState, payload){
@@ -107,6 +111,9 @@ export default new Vuex.Store({
                 "currency": "usd",
             };
         });
+    },
+    getUsername(state){
+        return state.username;
     }
   },
 
@@ -164,7 +171,16 @@ export default new Vuex.Store({
                 }
             })
         })
+    },
+    /*eslint-disable no-unused-vars*/
+    retrieveUsername(context){
+        firebase.auth().onAuthStateChanged(user => {
+            if(user){
+                context.state.username = user.displayName;
+            }
+        })
     }
+    /*eslint-unable no-unused-vars*/
   },
   
   modules: {}
