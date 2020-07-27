@@ -138,7 +138,7 @@ export default {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(this.getCartItems)
+          body: JSON.stringify([this.getCartItems, {email: this.getUserEmail}])
         })
         .then(x => {
           return x.json();
@@ -159,7 +159,8 @@ export default {
         getTotal: "getCartTotal",
         getTaxTvq: "getTaxTvq",
         getTaxTps: "getTaxTps",
-        getCartItems: "getCartItems"
+        getCartItems: "getCartItems",
+        getUserEmail: "getUserEmail"
       }),
       ...mapState(['cart']),
       bagTotal(){

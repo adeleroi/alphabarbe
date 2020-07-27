@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import firebase from "firebase/app"
+import "firebase/auth"
 import {mapGetters} from 'vuex'
 export default {
     name: "Navmenu",
@@ -69,6 +71,14 @@ export default {
     },
     methods:{
       logOut(){
+        firebase.auth().signOut().then(
+          res => console.log(res)
+        );
+        if(this.$router.name !== "Home"){
+          this.$router.go()
+        }else{
+          this.$router.push("/");
+        }
 
       }
     },
@@ -88,7 +98,7 @@ export default {
     background-color: purple;
     font-family: Arial, Helvetica, sans-serif;
     z-index: 2;
-    opacity: .9;
+    opacity: .95;
 }
 .nav-items{
     display: flex;

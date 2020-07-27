@@ -12,10 +12,11 @@ export default new Vuex.Store({
   state: {
     articles: [],
   cart: [],
-  cartStatus: 'empty',
+  cartStatus: '',
   sessionId: '',
   showReviewCart: false,
   username: '',
+  email: '',
   },
   mutations: {
     fetchArticles(currentState, payload){
@@ -114,6 +115,9 @@ export default new Vuex.Store({
     },
     getUsername(state){
         return state.username;
+    },
+    getUserEmail(state){
+        return state.email;
     }
   },
 
@@ -175,8 +179,12 @@ export default new Vuex.Store({
     /*eslint-disable no-unused-vars*/
     retrieveUsername(context){
         firebase.auth().onAuthStateChanged(user => {
+            console.log(user);
             if(user){
                 context.state.username = user.displayName;
+                context.state.email = user.email;
+            }else{
+                console.log("disconnected");
             }
         })
     }

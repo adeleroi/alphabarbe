@@ -15,46 +15,21 @@
                 <h3 align="left" class="product-size-title">Size:
                     <span class="product-size-size">{{product.size}} ml</span>
                 </h3>
-                <!-- <ul class="item-list-size">
-                    <li class="item-size">120 ml</li>
-                    <li class="item-size">300 ml</li>
-                    <li class="item-size">550 ml</li>
-                </ul> -->
             </div>
             <div class="product-quantity-addtocart">
-                <div class="product-quantity">
-                    <select id="product-cart-item-quantity" v-if="false">
-                        <option >1</option>
-                        <option >2</option>
-                        <option >3</option>
-                        <option >4</option>
-                    </select>
-                </div>
                 <button class="product-addtocart-btn" @click="addCart">
                     <span class="product-addtoCartd-msg">ADD TO CART</span>
                 </button>
             </div>
-            <!-- <div class="product-info">
-                <div class="product-description">
-                    <div class="product-id">
-                        <p align=left>Product: {{product.prodId}}</p>
-                        <p align="left">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Inventore modi possimus nemo culpa ut labore commodi sint est quae autem?</p>
-                        <ul class="product-info-list">
-                            <li class="info" align="left">- Lorem ipsum dolor sit amet consectetur.</li>
-                            <li class="info" align="left">- Lorem ipsum dolor sit amet consectetur.</li>
-                            <li class="info" align="left">- Lorem ipsum dolor sit amet consectetur.</li>
-                            <li class="info" align="left">- Lorem ipsum dolor sit amet consectetur.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div> -->
           </div>
       </div>
   </div>
+    <Review v-bind:prodId="productId"/>
   </div>
 </template>
 
 <script>
+import Review from './Review'
 import {mapState} from 'vuex'
 import Cookies from "js-cookie"
 import dbase from '../assets/firebaseConfig/firebaseInit'
@@ -62,10 +37,12 @@ import "firebase/database"
 import {v4 as uuidv4} from 'uuid'
 export default {
     name: "Product",
+    components:{
+        Review,
+    },
     data(){
         return {
             qty: 1,
-            showReviewCart: false,
         }
     },
     props:{
@@ -102,7 +79,6 @@ export default {
                     })
                 }
             }
-            this.showReviewCart = true;
             this.$router.push(`/categories/${article.name}/${article.prodId}`)
         }
     },
@@ -111,15 +87,13 @@ export default {
         product(){
             return this.articles.find(el => el.prodId == this.productId);
         },
-    }
+    },
+
 }
 </script>
 
 <style>
-.product-container{
-    /* display: flex;
-    justify-content: center; */
-}
+
 .product{
     display: flex;
     justify-content: center;
@@ -215,4 +189,6 @@ export default {
 .product-image{
     border-bottom: 1px solid #d6d6d6;
 }
+/************************************************************* */
+
 </style>

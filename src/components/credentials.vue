@@ -5,7 +5,7 @@
                 <h1 class="signup-logo">Koutoukou</h1>
                 <span class="signup-logo second">Drink</span>
             </router-link>
-        <h2 class="signup-msg" v-if="login">Sing up</h2>
+        <h2 class="signup-msg" v-if="login">Sign up</h2>
         <h2 class="signup-msg" v-else>Log in</h2>
       </div>
       <div class="signup-container">
@@ -48,7 +48,7 @@ import firebase from "firebase/app"
 import "firebase/auth" 
 import "firebase/firestore"
 import Cookies from "js-cookie"
-// import dbase from "../assets/firebaseConfig/firebaseInit"
+import {mapState} from "vuex"
 export default {
     name: "Signup",
     props: {
@@ -59,13 +59,14 @@ export default {
             name: '',
             email: '',
             password: '',
-            confirmPass: '',
             username: '',
+            confirmPass: '',
             showNameError: false,
             showEmailError: false,
-            showPasswordError: false,
-            showSignupError: false,
             showWeakPassMsg: false,
+            showSignupError: false,
+            showPasswordError: false,
+            baseUrl: 'http://localhost:4000/setcustomclaims'
         }
     },
     methods:{
@@ -107,18 +108,26 @@ export default {
         hideError(){
             this.showPasswordError, this.showWeakPassMsg, this.showSignupError = false;
         },
+        // addCartItemsToRegisteredCart(value){
+        //     const cart = this.cart;
+        //     dbase.collection('users').doc(value).set(cart)
+        //     .then(data => {
+        //         console.log('registerd cart', data);
+        //     })
+        //     .catch(e => {e})
+        // },
         signUp(){
             if(!this.showNameError && !this.showEmailError && !this.showPasswordError){
                 firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(cred => {
-                    // return dbase.collection('users').doc(cred.user.uid).set({username: this.username})
-                    //     .then(x => {
-                    //     console.log('user: ', x);
-                    // })
-                    Cookies.set('useId', cred.user.uid, {expire: 365});
+                    console.log("uid", cred.user.uid);
+                    if(cred.user.uid)
+                        Cookies.set('userId', cred.user.uid, {expires: 365});
                     return cred.user.updateProfile({
-                        displayName: this.username
+                        displayName: this.username,
+                        emailVerified: true
                     })
-                }).catch(e => {
+                })
+                .catch(e => {
                     if(e.code === "auth/email-already-in-use"){
                         this.showSignupError = true;
                     }else if(e.code === "auth/weak-password"){
@@ -126,19 +135,44 @@ export default {
                     }
                 })
             }
-            this.$router.push("/");
+            this.$router.push("/login");
 
         },
         logIn(){
             if(!this.showEmailError){
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(cred => {
-                    console.log(cred.user.displayName);
-                    // dbase.collection('users').get()
-                }).catch(e =>{
+                    console.log('Id token', cred.user.getIdToken());
+                    return cred.user.getIdToken();
+                })
+                .then(idToken => {
+                    fetch(this.baseUrl, {
+                        method: "POST",
+                        headers:{
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            idToken,
+                        })
+                    })
+                    .then(res => {
+                        // console.log(res.json());
+                        return res.json()})
+                    .then(data => {
+                        console.log(data);
+                        if(data.status == "success"){
+                            firebase.auth().currentUser.getIdToken(true);
+                        }
+                    })
+                    .catch(e => {console.log(e)});
+                    // return promesse;
+                })
+                .catch(e =>{
                     console.log(e);
                 })
             }
+            console.log('kenef le menteur');
+            this.$router.push("/");
         },
         connect(){
             if(!this.login){
@@ -148,6 +182,9 @@ export default {
             }
         }
     },
+    computed:{
+        ...mapState['cart']
+    }
 }
 </script>
 
