@@ -57,6 +57,9 @@ export default {
         category(){
             return this.product.category;
         }
+    },
+    mounted(){
+        document.getElementsByClassName("products-list")[0].classList.add("for-categories")
     }
 }
 </script>
@@ -99,7 +102,7 @@ export default {
 .categories-review-msg{
   background: white;
   border-radius: 15px;
-  padding: 8px 30px 6px 30px;
+  padding: 7px 30px 8px 30px;
   color: black;
 }
 .product-detail.review-detail{
@@ -122,5 +125,9 @@ export default {
 }
 .product-image.review-image{
     border-bottom: none;
+}
+.products-list.for-categories{
+    display: flex;
+    justify-content: center;
 }
 </style>

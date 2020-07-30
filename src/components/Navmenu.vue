@@ -95,7 +95,7 @@ export default {
     top: 0;
     display: flex;
     justify-content: space-around;
-    background-color: purple;
+    background-color: rgb(104, 13, 104);
     font-family: Arial, Helvetica, sans-serif;
     z-index: 2;
     opacity: .95;
@@ -107,7 +107,7 @@ export default {
     min-width: 900px;
     height: 60px;
     color: white;
-    background-color: purple;
+    background-color: rgb(104, 13, 104);
     list-style: none;
     margin:0;
     font-size: 18px;
@@ -129,7 +129,7 @@ export default {
   font-size: 34px;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
-  color: yellow;
+  color: white;
 }
 .icon-cart{
     cursor: pointer;
@@ -144,7 +144,7 @@ export default {
     height: 11px;
     width: 13px;
     font-size:  10px;
-    color: black;
+    color: rgb(104, 13, 104);
     background-color: white;
     font-family: 'Courier New', Courier, monospace;
 }
@@ -155,7 +155,7 @@ export default {
   /* justify-content: left; */
   padding-left: 15px;
   top: 80px;
-  background-color: purple;
+  background-color: rgb(104, 13, 104);
   height: 40px;
   width: 150px;
   border-radius: 35px;
@@ -192,9 +192,9 @@ export default {
   position: absolute;
   top: 130px;
   right: 20px;
-  border: 1px solid black;
+  border: 1px solid rgb(104, 13, 104);
   border-radius: 5px;
-  box-shadow: 2px 2px 1px purple;
+  box-shadow: 2px 2px 1px rgb(104, 13, 104);
 }
 .nav-login-items{
   display: flex;
@@ -208,7 +208,7 @@ export default {
   /* margin: 0; */
 }
 .nav-login-item:hover{
-  background-color: grey;
+  background-color: #ccc;
   cursor: default;
 }
 @font-face {

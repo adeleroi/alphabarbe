@@ -27,6 +27,7 @@
             <label for="" class="signup-title" v-if="login">Confirm your password</label>
             <input type="password" placeholder="Confirm password" v-model.lazy="confirmPass" class="signup-password signform" @blur="passwordCheck" @focus="hideError" v-if="login">
             <label for="" class="signup-title error" v-if="showPasswordError">The passwords don't match.</label>
+            <label for="" class="signup-title error" v-if="showUserNotFoundMsg">Incorrect email or password.</label>
             <button class="signup-submit-btn ">
                 <span class="signup-submit-btn-msg">SUBMIT</span>
             </button>
@@ -66,6 +67,7 @@ export default {
             showWeakPassMsg: false,
             showSignupError: false,
             showPasswordError: false,
+            showUserNotFoundMsg: false,
             baseUrl: 'http://localhost:4000/setcustomclaims'
         }
     },
@@ -130,9 +132,11 @@ export default {
                 .catch(e => {
                     if(e.code === "auth/email-already-in-use"){
                         this.showSignupError = true;
-                    }else if(e.code === "auth/weak-password"){
+                    }
+                    if(e.code === "auth/weak-password"){
                         this.showWeakPassMsg = true;
                     }
+
                 })
             }
             this.$router.push("/login");
@@ -162,17 +166,20 @@ export default {
                         console.log(data);
                         if(data.status == "success"){
                             firebase.auth().currentUser.getIdToken(true);
+                            this.$router.push("/");
                         }
                     })
-                    .catch(e => {console.log(e)});
+                    // .catch(e => {console.log(e)});
                     // return promesse;
                 })
                 .catch(e =>{
                     console.log(e);
+                    if(e.code === "auth/user-not-found"){
+                        this.showUserNotFoundMsg = true;
+                    }
                 })
             }
             console.log('kenef le menteur');
-            this.$router.push("/");
         },
         connect(){
             if(!this.login){

@@ -4,9 +4,9 @@
         <div class="submit" id="contact">
                 <span class="preamble-question">Join our community</span>
                 <!-- <span class="preamble-recommendation">Stay in touch with us for releases, demos, and updates.</span> -->
-                <div class="invalid-email" v-if="isEmailBad"> Your email doesn't look right...</div>
+                <div class="submit-invalid-email" v-if="isEmailBad"> Your email doesn't look right...</div>
             <div class="submit-registration">
-                <input type="text" id="email" v-model="emailAddress">
+                <input type="text" id="email" v-model="emailAddress" @focus="focus">
                 <button id="btn-submit" @click="sendEmail" ><span class="submit-text">submit</span></button>
             </div>
 
@@ -40,7 +40,12 @@ export default {
                     console.log(x)
                 })
                 this.emailAddress = "";
-             }    
+            }
+            document.getElementsByClassName("submit-shadow")[0].style.opacity = 0.45;
+        },
+        focus(){
+            document.getElementsByClassName("submit-shadow")[0].style.opacity = 0.85;
+            console.log(document.getElementsByClassName("submit-shadow"))
         }
     }
 }
@@ -63,7 +68,7 @@ export default {
     opacity: 0.45;
     background-color: black;
 }
-  .submit {
+.submit {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -79,7 +84,14 @@ export default {
     background-size: cover;
     width: 86%;
     margin-bottom: 60px;
-  }
+}
+.submit-invalid-email{
+    display: flex;
+    z-index: 2;
+    color: red;
+    align-self: left;
+    width: 520px;
+}
 .preamble-question {
     height: 54px;
     font-family: Poppins;
@@ -102,33 +114,54 @@ export default {
 }
 .submit-registration{
     z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    padding: 0px;
+    border-radius: 40px;
+    width: 650px;
+    position: relative;
 }
 #btn-submit {
-    width: 186px;
+    width: 112px;
     cursor: pointer;
-    background: #4b4a80;
-    border: 1px solid #fff;
-    border-radius: 5px;
+    background: rgb(104, 13, 104);
+    border: 0.5px solid #fff;
+    border-radius: 40px;
+    position: absolute;
+    right: 0;
+    outline: none;
 }
 #email {
-    padding-left: 10px;
-    width: 416px;
-    font-size: 25px;
+    padding-left: 20px;
+    width: 650px;
+    font-size: 20px;
     line-height: 28px;
-    background: hsla(0,0%,100%,.7);
+    background-color: rgba(255,255,255,.15);
     border: 1px solid #4b4a80;
-    border-radius: 5px;
+    border-radius: 33px;
+    margin-left: 0px;
+    outline: none;
+    /* opacity: 0.98; */
 }
-#btn-submit, #email {
-    height: 56px;
+#email:focus{
+    
+}
+#email {
+    height: 49px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+#btn-submit {
+    height: 49px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .submit-text {
-    font-family: Rokkitt;
+    /* font-family: Rokkitt; */
     font-style: normal;
     font-weight: 400;
-    font-size: 25px;
+    font-size: 18px;
     line-height: 28px;
     text-align: center;
     color: #fff;

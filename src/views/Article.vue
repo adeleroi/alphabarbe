@@ -1,6 +1,6 @@
 <template>
   <div class="article-container">
-      <Product v-bind:productId="ID"/>
+      <Product class="for-article-prod" v-bind:productId="ID"/>
   </div>
 </template>
 
@@ -30,11 +30,18 @@ export default {
     },
     computed:{
 
+    },
+    mounted(){
+        document.getElementsByClassName("products-list")[0].classList.add("for-article-prod")
     }
 
 }
 </script>
 
 <style>
-
+.for-article-prod{
+    display: flex;
+    justify-content: left;
+    /* background-color: red; */
+}
 </style>

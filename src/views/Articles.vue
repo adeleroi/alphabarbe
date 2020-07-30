@@ -17,6 +17,9 @@ export default {
             type: String,
             required: true
         }
+    },
+    mounted(){
+        document.getElementsByClassName("products-list")[0].classList.add("for-categories")
     }
 }
 </script>
@@ -24,5 +27,9 @@ export default {
 <style>
 .articles-type{
     margin-top: 100px;
+}
+.products-list.for-categories{
+    display: flex;
+    justify-content: center;
 }
 </style>

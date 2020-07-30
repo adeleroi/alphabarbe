@@ -1,6 +1,6 @@
 <template>
   <div class="products">
-    <ul class="products-list">
+    <ul class="products-list for-home">
       <li class="products-item"
         v-for="prod in articles"
         v-bind:key="prod.prodId"
@@ -8,7 +8,7 @@
         <router-link :to="{
           name: 'Article',
           params: {slug: prod.name, id:prod.prodId},
-          query: {}
+          force: true
         }">
         <div class="product-image">
           <img :src="prod.url" class="product-img">
@@ -16,7 +16,6 @@
           <p class="products-name">{{prod.name}}</p>
         </router-link>
         <p class="products-price">${{prod.price}}</p>
-        <!-- <button class="products-addToCart">Add to cart</button> -->
       </li> 
     </ul>
   </div>
@@ -35,13 +34,19 @@ export default {
     }
   },
   methods:{
-
+    go(){
+      if(this.$route.name === 'Article'){
+        this.$route.go();
+      }
+    }
   },
   computed:{
     ...mapGetters(['getAllArticles']),
     articles(){
-      if(this.category){
+      if(this.category && this.$route.name == "Categories" || this.$route.name == "Articles"){
         return this.getAllArticles.filter(el => el.category === this.category);
+      }else if(this.category && this.$route.name == "Article"){
+        return this.getAllArticles.filter(el => el.category !== this.category);
       }
       return this.getAllArticles;
     }
@@ -56,8 +61,8 @@ a{
 }
 .products{
   min-height: 523px;
-  margin-left: 150px;
-  margin-right: 150px;
+  margin-left: 110px;
+  margin-right: 110px;
 }
 .products-list{
   list-style: none;
@@ -72,13 +77,17 @@ a{
   margin: 35px;
 }
 .product-img {
-  width: 170px;
-  height: 300px;
+  width: 130px; /*170*/
+  height: 270px;/*300*/
   transition: transform .3s;
 }
 .product-img:hover{
   -ms-transform: scale(1.5); /* IE 9 */
   -webkit-transform: scale(1.5); /* Safari 3-8 */
   transform: scale(1.2);
+}
+.products-list.for-home{
+  display: flex;
+  justify-content: left;
 }
 </style>

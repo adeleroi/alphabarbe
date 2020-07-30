@@ -24,6 +24,12 @@
           </div>
       </div>
   </div>
+  <div class="product-annexe-products">
+      <h2 class="product-annexe-title" align="left" style="margin-left: 30px">
+          Related products
+      </h2>
+    <products :category="product.category" class="products-edit"/>
+  </div>
     <Review v-bind:prodId="productId"/>
   </div>
 </template>
@@ -35,10 +41,13 @@ import Cookies from "js-cookie"
 import dbase from '../assets/firebaseConfig/firebaseInit'
 import "firebase/database"
 import {v4 as uuidv4} from 'uuid'
+import products from './Products'
 export default {
     name: "Product",
     components:{
         Review,
+        products,
+        // prod: this.product
     },
     data(){
         return {
@@ -190,5 +199,11 @@ export default {
     border-bottom: 1px solid #d6d6d6;
 }
 /************************************************************* */
+.product-container{
+    display: flex;
+    flex-direction: column;
+}
+.products-edit{
 
+}
 </style>

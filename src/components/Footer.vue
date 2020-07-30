@@ -35,11 +35,11 @@ export default {
 .footer-container{
     /* position: absolute; */
     bottom:0;
-    background-color: #69977c;
+    background-color: #24292e;
     width: 100%;
 }
 .footer{
-    background-color: #69977c;
+    background-color: #24292e;
     height: 250px;
     margin-top: 100px;
     margin-left: 20%;
@@ -51,6 +51,7 @@ export default {
 .media-img{
     width: 20px;
     height: 20px;
+    color: black;
 }
 .footer-image{
     display: flex;
