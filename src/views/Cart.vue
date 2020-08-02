@@ -101,14 +101,14 @@ export default {
               el.prodId === article.prodId
           )
           console.log('find', find);
-          if(!Cookies.get('collectionId')){
+          if(!Cookies.get('collectionId') && !this.getUserEmail){
               const collectionId = uuidv4();
               dbase.collection(collectionId).add(article).then(x => {
                   if(x.id){
                       Cookies.set('collectionId', collectionId, {expires: 7});
                   }
               })
-          }else{
+          }else if(Cookies.get('collectionId') && !this.getUserEmail){
               if(!find){
                   dbase.collection(Cookies.get('collectionId')).add(article).then(x => {
                       console.log('addToCart: ', x);
@@ -119,7 +119,19 @@ export default {
                       qty: Number(article.qty)
                   })
               }
+          }else if(this.getUserEmail){
+            const collectionId = Cookies.get('userId');
+            if(!find){
+              dbase.collection(collectionId).add(article).then(x => {
+                console.log('article ajoute au panier de l utilisateur', x)
+              })
+            }else{
+              dbase.collection(collectionId).doc(find.documentId).update({
+                qty: Number(article.qty)
+              })
+            }
           }
+
           this.showReviewCart = true;
       },
       remove(prod){

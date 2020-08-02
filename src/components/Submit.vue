@@ -125,12 +125,17 @@ export default {
 #btn-submit {
     width: 112px;
     cursor: pointer;
-    background: rgb(104, 13, 104);
-    border: 0.5px solid #fff;
+    background: #24292e/*rgb(104, 13, 104)*/;
+    border: 1px solid #24292e/*rgb(104, 13, 104)*/;
     border-radius: 40px;
     position: absolute;
     right: 0;
     outline: none;
+}
+#btn-submit:hover{
+    /* color: black; */
+    background-color: rgb(68, 68, 241);
+    border: none;
 }
 #email {
     padding-left: 20px;
@@ -138,7 +143,7 @@ export default {
     font-size: 20px;
     line-height: 28px;
     background-color: rgba(255,255,255,.15);
-    border: 1px solid #4b4a80;
+    border: 1px solid #fff;
     border-radius: 33px;
     margin-left: 0px;
     outline: none;
@@ -153,9 +158,11 @@ export default {
     box-sizing: border-box;
 }
 #btn-submit {
-    height: 49px;
+    height: 47px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    margin-right: 1px;
+    margin-top: 1px;
 }
 .submit-text {
     /* font-family: Rokkitt; */

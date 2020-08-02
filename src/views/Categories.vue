@@ -102,7 +102,7 @@ export default {
 .categories-review-msg{
   background: white;
   border-radius: 15px;
-  padding: 7px 30px 8px 30px;
+  padding: 7px 30px 6px 30px;
   color: black;
 }
 .product-detail.review-detail{
@@ -125,6 +125,7 @@ export default {
 }
 .product-image.review-image{
     border-bottom: none;
+    margin: 0;
 }
 .products-list.for-categories{
     display: flex;

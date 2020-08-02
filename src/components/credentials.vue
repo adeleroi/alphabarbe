@@ -49,7 +49,7 @@ import firebase from "firebase/app"
 import "firebase/auth" 
 import "firebase/firestore"
 import Cookies from "js-cookie"
-import {mapState} from "vuex"
+import {mapState, mapGetters, mapActions} from "vuex"
 export default {
     name: "Signup",
     props: {
@@ -72,6 +72,11 @@ export default {
         }
     },
     methods:{
+        ...mapActions(
+            {
+                retrieveUserInfoAndCart: "retrieveUserInfoAndCart"
+            }
+        ),
         isNameValid(value){
             /*eslint-disable no-useless-escape*/
             const regex = /^[a-zA-Z\-' ]+$/;
@@ -110,43 +115,39 @@ export default {
         hideError(){
             this.showPasswordError, this.showWeakPassMsg, this.showSignupError = false;
         },
-        // addCartItemsToRegisteredCart(value){
-        //     const cart = this.cart;
-        //     dbase.collection('users').doc(value).set(cart)
-        //     .then(data => {
-        //         console.log('registerd cart', data);
-        //     })
-        //     .catch(e => {e})
-        // },
         signUp(){
             if(!this.showNameError && !this.showEmailError && !this.showPasswordError){
-                firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(cred => {
+                firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+                .then(cred => {
                     console.log("uid", cred.user.uid);
+                    
                     if(cred.user.uid)
                         Cookies.set('userId', cred.user.uid, {expires: 365});
                     return cred.user.updateProfile({
                         displayName: this.username,
                         emailVerified: true
                     })
+                }).then(() => {
+                    this.$router.push("/login");
                 })
                 .catch(e => {
                     if(e.code === "auth/email-already-in-use"){
                         this.showSignupError = true;
+                        console.log(e);
                     }
                     if(e.code === "auth/weak-password"){
+                        console.log(e);
                         this.showWeakPassMsg = true;
                     }
-
                 })
             }
-            this.$router.push("/login");
-
         },
         logIn(){
             if(!this.showEmailError){
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(cred => {
-                    console.log('Id token', cred.user.getIdToken());
+                    console.log('Id token', cred.user.uid);
+                    Cookies.get('userId', cred.user.uid, {expires: 365})
                     return cred.user.getIdToken();
                 })
                 .then(idToken => {
@@ -160,17 +161,20 @@ export default {
                         })
                     })
                     .then(res => {
-                        // console.log(res.json());
                         return res.json()})
                     .then(data => {
                         console.log(data);
                         if(data.status == "success"){
                             firebase.auth().currentUser.getIdToken(true);
-                            this.$router.push("/");
+                            console.log(this.getCartCount);
+                            if(this.getCartCount){
+                                this.retrieveUserInfoAndCart();
+                                this.$router.push("ask", () => this.$router.go(0));
+                            }else{
+                                this.$router.push("/");
+                            }
                         }
                     })
-                    // .catch(e => {console.log(e)});
-                    // return promesse;
                 })
                 .catch(e =>{
                     console.log(e);
@@ -179,7 +183,7 @@ export default {
                     }
                 })
             }
-            console.log('kenef le menteur');
+            // console.log('kenef le menteur');
         },
         connect(){
             if(!this.login){
@@ -190,7 +194,13 @@ export default {
         }
     },
     computed:{
-        ...mapState['cart']
+        ...mapState({
+            cart:'cart',
+            emailaddress: 'emailaddress',
+            uid: 'uid'
+            }),
+        ...mapGetters({
+            getCartCount:'getCartCount'})
     }
 }
 </script>

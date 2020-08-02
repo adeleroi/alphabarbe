@@ -7,7 +7,7 @@
           </div>
           <div class="product-detail">
             <div class="product-name-price">
-              <h2 class="product-type-name">{{product.description}}</h2>
+              <!-- <h2 class="product-type-name">{{product.description}}</h2> -->
               <h1 class="product-name">{{product.name}}</h1>
               <p class="product-price" align="left">${{product.price}}</p>
             </div>
@@ -15,6 +15,10 @@
                 <h3 align="left" class="product-size-title">Size:
                     <span class="product-size-size">{{product.size}} ml</span>
                 </h3>
+            </div>
+
+            <div class="product-description-info">
+                <p class="product-descrip-info">{{product.info}}</p>
             </div>
             <div class="product-quantity-addtocart">
                 <button class="product-addtocart-btn" @click="addCart">
@@ -24,8 +28,9 @@
           </div>
       </div>
   </div>
+
   <div class="product-annexe-products">
-      <h2 class="product-annexe-title" align="left" style="margin-left: 30px">
+      <h2 class="product-annexe-title" align="left" >
           Related products
       </h2>
     <products :category="product.category" class="products-edit"/>
@@ -47,7 +52,6 @@ export default {
     components:{
         Review,
         products,
-        // prod: this.product
     },
     data(){
         return {
@@ -102,7 +106,6 @@ export default {
 </script>
 
 <style>
-
 .product{
     display: flex;
     justify-content: center;
@@ -118,7 +121,6 @@ export default {
     grid-template-columns: auto auto;
     min-width: 300px;
     width: 850px;
-
 }
 .image{
     width: 220px;
@@ -140,6 +142,7 @@ export default {
     display: grid;
     justify-content: left;
     border-top: 1px solid #d6d6d6;
+    margin-bottom: 15px;
 }
 .product-price{
     font-size: 24px;
@@ -151,16 +154,14 @@ export default {
     padding-left: 0;
     list-style: none;
 }
-.product-size-title{
-    margin-bottom: 20px;
-}
+
 .product-size-size{
     font-weight: normal;
 }
 .product-quantity-addtocart{
     display: flex;
     justify-content: left;
-    margin-bottom: 24px;
+    margin-top: 40px;
 }
 .product-quantity{
     align-self: center;
@@ -203,7 +204,20 @@ export default {
     display: flex;
     flex-direction: column;
 }
-.products-edit{
-
+.product-annexe-title{
+    padding-left: 0;
+}
+.product-annexe-products{
+    margin: 0 80px 0 80px;
+    padding: 0;
+}
+.product-description-info{
+    display: flex;
+    justify-content: left;;
+    font-weight: bold;
+    font-size: 14px;
+}
+.product-description-info{
+text-align: left;
 }
 </style>

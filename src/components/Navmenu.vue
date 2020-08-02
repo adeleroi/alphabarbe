@@ -61,7 +61,7 @@
 <script>
 import firebase from "firebase/app"
 import "firebase/auth"
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 export default {
     name: "Navmenu",
     data(){
@@ -70,16 +70,17 @@ export default {
         }
     },
     methods:{
+      ...mapMutations(['clearCart']),
       logOut(){
         firebase.auth().signOut().then(
           res => console.log(res)
         );
-        if(this.$router.name !== "Home"){
-          this.$router.go()
-        }else{
+        this.clearCart;
+        if(this.$router.name == "Home"){
           this.$router.push("/");
+        }else{
+          this.$router.go()
         }
-
       }
     },
     computed: {
@@ -95,7 +96,7 @@ export default {
     top: 0;
     display: flex;
     justify-content: space-around;
-    background-color: rgb(104, 13, 104);
+    background-color:#24292e; /*rgb(104, 13, 104);*/
     font-family: Arial, Helvetica, sans-serif;
     z-index: 2;
     opacity: .95;
@@ -107,7 +108,7 @@ export default {
     min-width: 900px;
     height: 60px;
     color: white;
-    background-color: rgb(104, 13, 104);
+    background-color: #24292e;/* rgb(104, 13, 104);*/
     list-style: none;
     margin:0;
     font-size: 18px;
@@ -144,7 +145,7 @@ export default {
     height: 11px;
     width: 13px;
     font-size:  10px;
-    color: rgb(104, 13, 104);
+    color: #24292e /* rgb(104, 13, 104)*/;
     background-color: white;
     font-family: 'Courier New', Courier, monospace;
 }
@@ -155,7 +156,7 @@ export default {
   /* justify-content: left; */
   padding-left: 15px;
   top: 80px;
-  background-color: rgb(104, 13, 104);
+  background-color: #24292e/*rgb(104, 13, 104)*/;
   height: 40px;
   width: 150px;
   border-radius: 35px;
@@ -192,9 +193,10 @@ export default {
   position: absolute;
   top: 130px;
   right: 20px;
-  border: 1px solid rgb(104, 13, 104);
+  border: 1px solid #24292e/*rgb(104, 13, 104)*/;
   border-radius: 5px;
-  box-shadow: 2px 2px 1px rgb(104, 13, 104);
+  /* padding: 10px; */
+  box-shadow: 2px 2px 10px #24292e/*rgb(104, 13, 104)*/;
 }
 .nav-login-items{
   display: flex;
@@ -208,8 +210,10 @@ export default {
   /* margin: 0; */
 }
 .nav-login-item:hover{
-  background-color: #ccc;
+  background-color: #24292e/*rgb(104, 13, 104)*/;
   cursor: default;
+  color: white;
+  cursor: pointer;
 }
 @font-face {
   font-family: 'icomoon';

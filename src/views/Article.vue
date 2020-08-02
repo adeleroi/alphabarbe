@@ -28,9 +28,13 @@ export default {
             ID: this.id
         }
     },
-    computed:{
-
+    
+    watch:{
+        slug:function(){
+            this.$router.go();
+        }
     },
+
     mounted(){
         document.getElementsByClassName("products-list")[0].classList.add("for-article-prod")
     }

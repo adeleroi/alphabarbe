@@ -1,7 +1,7 @@
 <template>
     <div class="review">
       <div class="review-title-stars">
-          <h2 class="review-title">Ratings</h2>
+          <h2 class="review-title">Clients Reviews</h2>
           <div class="stars"></div>
       </div>
       <div class="review-btn-comments">
@@ -227,6 +227,9 @@ export default {
 .review{
     display: flex;
     flex-direction: row;
+    border-top: 1px solid #ccc;
+    padding-top:30px;
+    margin: 0 80px 0 80px;
 }
 .review-title-stars{
     display: flex;
@@ -235,7 +238,7 @@ export default {
 }
 .review-title{
     text-align: left;
-    margin-left: 30px;
+    /* margin-left: 30px; */
     margin-top: 0;
 }
 .review-btn-comments{

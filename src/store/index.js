@@ -10,14 +10,16 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    articles: [],
+  articles: [],
   cart: [],
   comments: [],
+  tempCart: [],
   cartStatus: '',
   sessionId: '',
   showReviewCart: false,
   username: '',
-  email: '',
+  emailaddress: '',
+  uid: ''
   },
   mutations: {
     fetchArticles(currentState, payload){
@@ -28,6 +30,14 @@ export default new Vuex.Store({
         // console.log('found', found);
         if(!found){
             currentState.cart.push(payload);
+        }else{
+            found.qty = payload.qty;
+        }
+    },
+    fetchTempCart(currentState, payload){
+        const found = currentState.tempCart.find(el => el.prodId === payload.prodId);
+        if(!found){
+            currentState.tempCart.push(payload);
         }else{
             found.qty = payload.qty;
         }
@@ -127,7 +137,10 @@ export default new Vuex.Store({
         return state.username;
     },
     getUserEmail(state){
-        return state.email;
+        return state.emailaddress;
+    },
+    getUid(state){
+        return state.uid;
     }
   },
 
@@ -161,49 +174,68 @@ export default new Vuex.Store({
                     // val = {
                     //     ...val,
                     // };
-                    console.log(val);
+                    // console.log(val);
                     context.commit('fetchArticles', {...val});
                 }
             })
         })
     },
     retrieveCart(context){
-        // console.log('will');
-        const collectionId = Cookies.get('collectionId');
+        const toggle = context.state.username;
+        const collectionId = toggle ? context.state.uid: Cookies.get('collectionId');
+        console.log(toggle);
         dbStore.collection(collectionId).onSnapshot(snap =>{
             let rawDocs = snap.docChanges();
             rawDocs.forEach(rawDoc => {
                 if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
                     let val = rawDoc.doc.data();
-                    // console.log(rawDoc.doc.id)
                     const documentId = rawDoc.doc.id;
                     val = {
                         ...val,
                         documentId,
                     };
-                    // console.log('retrieveCart documentId',documentId);
+                    console.log(val);
                     context.commit('fetchCart', {...val});
                 }
             })
         })
     },
-
+    retrieveTempCart(context){
+        if(Cookies.get('collectionId')){
+            const collectionId = Cookies.get('collectionId');
+            dbStore.collection(collectionId).onSnapshot(snap =>{
+                let rawDocs = snap.docChanges();
+                rawDocs.forEach(rawDoc => {
+                    if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
+                        let val = rawDoc.doc.data();
+                        const documentId = rawDoc.doc.id;
+                        val = {
+                            ...val,
+                            documentId,
+                        };
+                        console.log(val);
+                        context.commit('fetchTempCart', {...val});
+                    }
+                })
+            })
+        }
+    },
     /*eslint-disable no-unused-vars*/
-    retrieveUsername(context){
+    retrieveUserInfoAndCart(context){
         firebase.auth().onAuthStateChanged(user => {
-            // console.log(user);
+            console.log('retrieveUsername', user);
             if(user){
                 context.state.username = user.displayName;
-                context.state.email = user.email;
-            }else{
-                console.log("disconnected");
+                context.state.emailaddress = user.email;
+                context.state.uid = user.uid;
             }
+            context.dispatch('retrieveCart');
+
         })
     }
     /*eslint-unable no-unused-vars*/
   },
   retrieveReviews(context){
-
     dbStore.collection("reviews").onSnapshot(snap => {
         let rawDocs = snap.docChanges();
         rawDocs.forEach(rawDoc => {
