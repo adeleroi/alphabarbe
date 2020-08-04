@@ -58,7 +58,7 @@ export default {
             return this.product.category;
         }
     },
-    mounted(){
+    beforeMounted(){
         document.getElementsByClassName("products-list")[0].classList.add("for-categories")
     }
 }

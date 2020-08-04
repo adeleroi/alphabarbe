@@ -55,6 +55,7 @@ export default {
 .submit-container{
     position: relative;
     display: flex;
+    /* place-items: center; */
     justify-content: center;
     width: 100%;
     margin-top: 100px;
@@ -119,7 +120,7 @@ export default {
     background-color: white;
     padding: 0px;
     border-radius: 40px;
-    width: 650px;
+    width: 80%;
     position: relative;
 }
 #btn-submit {
@@ -139,7 +140,7 @@ export default {
 }
 #email {
     padding-left: 20px;
-    width: 650px;
+    width: 80%;
     font-size: 20px;
     line-height: 28px;
     background-color: rgba(255,255,255,.15);

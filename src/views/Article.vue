@@ -20,22 +20,18 @@ export default {
             type: String,
             required: true
         }
-        
     },
     data(){
         return {
-            
             ID: this.id
         }
     },
-    
     watch:{
         slug:function(){
             this.$router.go();
         }
     },
-
-    mounted(){
+    beforeMounted(){
         document.getElementsByClassName("products-list")[0].classList.add("for-article-prod")
     }
 
@@ -48,4 +44,5 @@ export default {
     justify-content: left;
     /* background-color: red; */
 }
+
 </style>

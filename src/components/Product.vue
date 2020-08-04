@@ -9,7 +9,7 @@
             <div class="product-name-price">
               <!-- <h2 class="product-type-name">{{product.description}}</h2> -->
               <h1 class="product-name">{{product.name}}</h1>
-              <p class="product-price" align="left">${{product.price}}</p>
+              <p class="product-price">${{product.price}}</p>
             </div>
             <div class="product-size">
                 <h3 align="left" class="product-size-title">Size:
@@ -73,14 +73,14 @@ export default {
                 el.prodId === article.prodId
             )
             console.log('find', find);
-            if(!Cookies.get('collectionId')){
+            if(!Cookies.get('collectionId') && !Cookies.get('userId')){
                 const collectionId = uuidv4();
                 dbase.collection(collectionId).add(article).then(x => {
                     if(x.id){
                         Cookies.set('collectionId', collectionId, {expires: 7});
                     }
                 })
-            }else{
+            }else if(Cookies.get('collectionId') && !Cookies.get('userId')){
                 if(!find){
                     dbase.collection(Cookies.get('collectionId')).add(article).then(x => {
                         console.log('addToCart: ', x);
@@ -89,6 +89,17 @@ export default {
                     dbase.collection(Cookies.get('collectionId'))
                     .doc(find.documentId).update({
                         qty: Number(find.qty + this.qty)
+                    })
+                }
+            }else if(Cookies.get('userId')){
+                const collectionId = Cookies.get('userId');
+                if(!find){
+                    dbase.collection(collectionId).add(article).then(x => {
+                        console.log('article ajoute au panier de l utilisateur', x)
+                    })
+                }else{
+                    dbase.collection(collectionId).doc(find.documentId).update({
+                        qty: Number(article.qty)
                     })
                 }
             }
@@ -106,22 +117,81 @@ export default {
 </script>
 
 <style>
+.product-container{
+    display: grid;
+    place-items: center;
+}
 .product{
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
     margin-top: 150px;
     min-height: 532px;
+        display: grid;
+    place-items: center;
 }
 .product-detail{
     margin-left: 100px;
 }
 .product-image-description{
     display: grid;
+    /* place-items: center; */
     grid-template-columns: auto auto;
     min-width: 300px;
     width: 850px;
 }
+.product-price{
+
+}
+/*************************************************************************** */
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 614px)
+
+and (-webkit-min-device-pixel-ratio: 2) {
+.product-price{
+    display: flex;
+    justify-content: center;
+    margin-right: 105px;
+}
+.product-image-description{
+    display: grid;
+    place-items: center;
+    grid-template-columns: none;
+    min-width: 300px;
+    width: 850px;
+}
+.product-detail{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.product-name-price{
+    /* display: flex;
+    width: 100%; */
+}
+.product-name{
+    display: flex;
+    align-self: center;
+    flex-direction: column;
+    margin-right: 105px;
+
+}
+.product-description-info{
+    margin-right: 263px;
+    margin-left: 161px;
+}
+.product-descrip-info{
+
+}
+.product-quantity-addtocart{
+
+}
+.product-addtocart-btn {
+    margin-left: 229px;
+}
+}
+/**************************************************************************** */
 .image{
     width: 220px;
     height: 350px;
@@ -136,7 +206,6 @@ export default {
 }
 .product-name-price{
     display: grid;
-    justify-content: left;
 }
 .product-size{
     display: grid;
@@ -147,6 +216,7 @@ export default {
 .product-price{
     font-size: 24px;
     margin-top: 0;
+    text-align: left;
 }
 .item-list-size{
     display: grid;

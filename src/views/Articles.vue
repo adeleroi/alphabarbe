@@ -32,4 +32,13 @@ export default {
     display: flex;
     justify-content: center;
 }
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 614px)
+
+and (-webkit-min-device-pixel-ratio: 2) {
+.article-container{
+    min-height: 823px;
+}
+}
 </style>

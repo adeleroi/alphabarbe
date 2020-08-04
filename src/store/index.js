@@ -183,10 +183,11 @@ export default new Vuex.Store({
     retrieveCart(context){
         const toggle = context.state.username;
         const collectionId = toggle ? context.state.uid: Cookies.get('collectionId');
-        console.log(toggle);
+        console.log('username',toggle);
         dbStore.collection(collectionId).onSnapshot(snap =>{
             let rawDocs = snap.docChanges();
             rawDocs.forEach(rawDoc => {
+                console.log(rawDoc);
                 if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
                     let val = rawDoc.doc.data();
                     const documentId = rawDoc.doc.id;
@@ -194,7 +195,7 @@ export default new Vuex.Store({
                         ...val,
                         documentId,
                     };
-                    console.log(val);
+                    // console.log(val);
                     context.commit('fetchCart', {...val});
                 }
             })
@@ -242,7 +243,7 @@ export default new Vuex.Store({
             if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
                 let val = rawDoc.doc.data();
                 context.commit('fetchComment', {...val});
-                console.log("val", val)
+                // console.log("val", val)
             }
         })
     })

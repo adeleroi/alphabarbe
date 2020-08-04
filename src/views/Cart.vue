@@ -96,22 +96,20 @@ export default {
               ...article,
               qty: Number(article.qty),
           }
-          console.log(this.cart, article.prodId);
+          // console.log(this.cart, article.prodId);
           const find = this.cart.find(el =>
               el.prodId === article.prodId
           )
-          console.log('find', find);
-          if(!Cookies.get('collectionId') && !this.getUserEmail){
+          if(!Cookies.get('collectionId') && !Cookies.get('userId')){
               const collectionId = uuidv4();
               dbase.collection(collectionId).add(article).then(x => {
                   if(x.id){
                       Cookies.set('collectionId', collectionId, {expires: 7});
                   }
               })
-          }else if(Cookies.get('collectionId') && !this.getUserEmail){
+          }else if(Cookies.get('collectionId') && !Cookies.get('userId')){
               if(!find){
-                  dbase.collection(Cookies.get('collectionId')).add(article).then(x => {
-                      console.log('addToCart: ', x);
+                  dbase.collection(Cookies.get('collectionId')).add(article).then(() => {
                   })
               }else{
                   dbase.collection(Cookies.get('collectionId'))
@@ -119,7 +117,7 @@ export default {
                       qty: Number(article.qty)
                   })
               }
-          }else if(this.getUserEmail){
+          }else if(Cookies.get('userId')){
             const collectionId = Cookies.get('userId');
             if(!find){
               dbase.collection(collectionId).add(article).then(x => {
@@ -150,7 +148,7 @@ export default {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify([this.getCartItems, {email: this.getUserEmail}])
+          body: JSON.stringify(this.getCartItems)
         })
         .then(x => {
           return x.json();
@@ -159,7 +157,6 @@ export default {
       },
       checkoutRedirect(){
         this.checkoutSessionAndPayment().then(data => {
-          console.log(data.sessionId);
           stripe.redirectToCheckout({
             sessionId: data.sessionId
           });

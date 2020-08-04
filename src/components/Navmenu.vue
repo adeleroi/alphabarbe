@@ -1,49 +1,57 @@
 <template>
   <div class="navmenu">
-      <ul class="nav-items">
-          <li class="nav-item nav-logo">
+      <div @click="showMenu = !showMenu" v-bind:class="{active:showMenu}" class="hamburger">
+        <div class="hamburgerline" ref="openMenu"></div>
+      </div>
+      <!-- <div class="nav-mobile nav-logo" >
+        <router-link to='/' class="nav-logo" title="Go to homepage">Koutoukou
+        <span style="color:white;font-family:'Rock Salt', cursive; font-weight:normal;font-size: 24px">Drink</span>
+        </router-link>
+      </div> -->
+      <div class="nav-items" :class="{navmobile: showMenu}" >
+          <div class="nav-item nav-logo" v-if="!showMenu">
             <router-link to='/' class="nav-logo" title="Go to homepage">Koutoukou
-            <span style="color:white;font-family:'Rock Salt', cursive; font-weight:normal;font-size: 24px">Drink</span>
+            <span class="nav-logo-drink">Drink</span>
             </router-link>
-          </li>
-          <li class="nav-item">
+          </div>
+          <div class="nav-item" :class="{mobile: showMenu}">
             <router-link :to="{
               name: 'Articles',
               params:{slug: 'vodka'}
             }">
               <span class="nav-item-msg">Vodka</span>
             </router-link>
-          </li>
-          <li class="nav-item">
+          </div>
+          <div class="nav-item" :class="{mobile: showMenu}">
             <router-link :to="{
               name: 'Articles',
               params:{slug: 'whiskey'}
             }">
               <span class="nav-item-msg">Whiskey</span>
             </router-link>
-          </li>
-          <li class="nav-item">
+          </div>
+          <div class="nav-item" :class="{mobile: showMenu}">
             <router-link :to="{
               name: 'Articles',
               params:{slug: 'gin'}
             }">
               <span class="nav-item-msg">Gin</span>
             </router-link>
-          </li>
-          <li class="nav-item">
+          </div>
+          <div class="nav-item" :class="{mobile: showMenu}">
             <router-link :to="{
               name: 'Signup',
             }">
               <span class="nav-item-msg" v-if="!getUsername">Sign up</span>
             </router-link>
-          </li>
-          <li class="nav-item nav-cart">
+          </div>
+          <div class="nav-item nav-cart" :class="{mobile: showMenu}">
             <router-link to='/cart' class="nav-cart-link">
               <i class="icon-cart"></i>
             </router-link>
             <span class="nav-class-qty" v-if="getCartCount">{{getCartCount}}</span>
-          </li>
-      </ul>
+          </div>
+      </div>
       <div class="nav-user-section" v-if="getUsername">
         <i class="icon-avatar"></i>
         <span class="nav-username">{{getUsername}}</span>
@@ -51,8 +59,8 @@
       </div>
       <div class="nav-login-menu" v-if="isActive">
         <ul class="nav-login-items">
-          <li class="nav-login-item">Profile</li>
-          <li class="nav-login-item" @click="logOut">Log out</li>
+          <div class="nav-login-item">Profile</div>
+          <div class="nav-login-item" @click="logOut">Log out</div>
         </ul>
       </div>
   </div>
@@ -62,11 +70,14 @@
 import firebase from "firebase/app"
 import "firebase/auth"
 import {mapGetters, mapMutations} from 'vuex'
+import Cookies from "js-cookie"
+
 export default {
     name: "Navmenu",
     data(){
         return{
           isActive: false,
+          showMenu: false,
         }
     },
     methods:{
@@ -76,11 +87,8 @@ export default {
           res => console.log(res)
         );
         this.clearCart;
-        if(this.$router.name == "Home"){
-          this.$router.push("/");
-        }else{
-          this.$router.go()
-        }
+        Cookies.remove('userId');
+        this.$router.push('/login', ()=> this.$router.go(0));
       }
     },
     computed: {
@@ -94,8 +102,9 @@ export default {
     position: fixed;
     width: 100%;
     top: 0;
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    /* justify-content: space-around; */
+    place-items: center;
     background-color:#24292e; /*rgb(104, 13, 104);*/
     font-family: Arial, Helvetica, sans-serif;
     z-index: 2;
@@ -103,19 +112,25 @@ export default {
 }
 .nav-items{
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    min-width: 900px;
+    /* grid-template-columns: auto auto auto auto auto; */
+    /* flex-direction: row; */
+    place-items: center;
+    /* justify-content: center; */
+    /* min-width: 900px; */
     height: 60px;
     color: white;
     background-color: #24292e;/* rgb(104, 13, 104);*/
     list-style: none;
     margin:0;
     font-size: 18px;
+    padding-left: 0;
+
 }
 .nav-item{
     align-self: center;
     cursor: pointer;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 .nav-item-msg{
   color:white;
@@ -215,6 +230,122 @@ export default {
   color: white;
   cursor: pointer;
 }
+.nav-logo-drink{
+  color:white;font-family:'Rock Salt', cursive; font-weight:normal;font-size: 24px
+}
+.nav-mobile{
+  visibility: hidden;
+}
+/****************************************************************************** */
+  @media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 614px)
+
+  and (-webkit-min-device-pixel-ratio: 2) {
+  .hamburger {
+    position: relative;
+    left: 0;
+    /* margin-top: 18px; */
+    display: block;
+    justify-content: center;
+    /* margin-right: 18.45px; */
+    width: 48px;
+    height: 48px;
+    transition: all .5s ease-in-out;
+    /* background: url(./pictures/hamburger.png); */
+    z-index: 4;
+  }
+  .hamburgerline {
+    position: absolute;
+    top: 50%;
+    width: 25px;
+    height: 3px;
+    background-color: white; /*#4B4A80*/
+    /* border: solid 1px; */
+    transition: all .5s ease-in-out;
+    transform: translateY(-50%);
+  }
+  .hamburgerline::before,
+  .hamburgerline::after {
+    content: "";
+    position: absolute;
+    width: 25px;
+    height: 3px;
+    left: 0;
+    background-color: white;
+    transition: all .3s ease-in-out;
+  }
+  .hamburgerline::before {
+    transform: translateY(-10px)
+  }
+  .hamburgerline::after {
+    transform: translateY(10px)
+  }
+  .hamburger.active {
+  }
+  .hamburger.active  .hamburgerline {
+    background: transparent;
+    /* background-color: blue; */
+  }
+  .hamburger.active .hamburgerline::before {
+    transform: rotate(45deg);
+    background-color: white;
+  }
+  .hamburger.active .hamburgerline::after {
+    transform: rotate(-45deg);
+    background-color: white;
+  }
+  .nav-items.navmobile{
+    position: absolute;
+    left: 0;
+    top:48px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: black;
+    transition: all 0.8s cubic-bezier(1, 0, 0, 0);
+    background-color: black;
+    height: 800px;
+    width: 100%;
+  }
+  .nav-item{
+    /* position: absolute; */
+    display: flex;
+    justify-content: left;
+  }
+  .nav-items.navmobile > nav-item.icon{
+    display: none;
+  }
+  .nav-item.mobile{
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    justify-content:left;
+    margin-left: 70px;
+  }
+  .nav-item-msg{
+    
+  }
+  .nav-items{
+    display: none;
+  }
+  .navmenu{
+    position:  relative;
+    display: flex;
+    justify-content: left;
+    padding-left: 20px;
+    background: #24292e;/*linear-gradient(to right ,orange,purple, yellow);*/
+    height: 100%;
+    width: 100%;
+  }
+  .nav-logo{
+   visibility: visible;
+   color: red;
+    font-size: 10px;
+  }
+}
+/******************************************************************************* */
 @font-face {
   font-family: 'icomoon';
   src:  url('../assets/fonts/icomoon.eot?jcfre3');

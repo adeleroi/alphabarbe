@@ -28,6 +28,7 @@
             <input type="password" placeholder="Confirm password" v-model.lazy="confirmPass" class="signup-password signform" @blur="passwordCheck" @focus="hideError" v-if="login">
             <label for="" class="signup-title error" v-if="showPasswordError">The passwords don't match.</label>
             <label for="" class="signup-title error" v-if="showUserNotFoundMsg">Incorrect email or password.</label>
+            <label for="" class="signup-title error" v-if="showNetworkErrorMsg">Network error. Interrupted connection.</label>
             <button class="signup-submit-btn ">
                 <span class="signup-submit-btn-msg">SUBMIT</span>
             </button>
@@ -68,6 +69,7 @@ export default {
             showSignupError: false,
             showPasswordError: false,
             showUserNotFoundMsg: false,
+            showNetworkErrorMsg: false,
             baseUrl: 'http://localhost:4000/setcustomclaims'
         }
     },
@@ -119,8 +121,6 @@ export default {
             if(!this.showNameError && !this.showEmailError && !this.showPasswordError){
                 firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then(cred => {
-                    console.log("uid", cred.user.uid);
-                    
                     if(cred.user.uid)
                         Cookies.set('userId', cred.user.uid, {expires: 365});
                     return cred.user.updateProfile({
@@ -133,10 +133,8 @@ export default {
                 .catch(e => {
                     if(e.code === "auth/email-already-in-use"){
                         this.showSignupError = true;
-                        console.log(e);
                     }
                     if(e.code === "auth/weak-password"){
-                        console.log(e);
                         this.showWeakPassMsg = true;
                     }
                 })
@@ -146,8 +144,7 @@ export default {
             if(!this.showEmailError){
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(cred => {
-                    console.log('Id token', cred.user.uid);
-                    Cookies.get('userId', cred.user.uid, {expires: 365})
+                    Cookies.set('userId', cred.user.uid, {expires: 365})
                     return cred.user.getIdToken();
                 })
                 .then(idToken => {
@@ -163,13 +160,11 @@ export default {
                     .then(res => {
                         return res.json()})
                     .then(data => {
-                        console.log(data);
                         if(data.status == "success"){
                             firebase.auth().currentUser.getIdToken(true);
-                            console.log(this.getCartCount);
-                            if(this.getCartCount){
+                            if(this.tempCart.length){
                                 this.retrieveUserInfoAndCart();
-                                this.$router.push("ask", () => this.$router.go(0));
+                                this.$router.push("/ask", () => this.$router.go(0));
                             }else{
                                 this.$router.push("/");
                             }
@@ -177,9 +172,10 @@ export default {
                     })
                 })
                 .catch(e =>{
-                    console.log(e);
                     if(e.code === "auth/user-not-found"){
                         this.showUserNotFoundMsg = true;
+                    }else if(e.code === "auth/network-request-failed"){
+                        this.showNetworkErrorMsg = true;
                     }
                 })
             }
@@ -196,8 +192,7 @@ export default {
     computed:{
         ...mapState({
             cart:'cart',
-            emailaddress: 'emailaddress',
-            uid: 'uid'
+            tempCart: 'tempCart'
             }),
         ...mapGetters({
             getCartCount:'getCartCount'})

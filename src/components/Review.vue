@@ -188,16 +188,18 @@ export default {
         
     },
     created(){
-        firebase.auth().currentUser.getIdTokenResult(true)
-        .then(idTokenResult => {
-            console.log('idTokenResult: ',idTokenResult.claims)
-            if(idTokenResult.claims.registered){
-                this.showReviewBtn = true;
-            }
-        })
-        .catch(e => {
-            console.log(e);
-        })
+        if(this.getUsername){
+            firebase.auth().currentUser.getIdTokenResult(true)
+            .then(idTokenResult => {
+                console.log('idTokenResult: ',idTokenResult.claims)
+                if(idTokenResult.claims.registered){
+                    this.showReviewBtn = true;
+                }
+            })
+            .catch(e => {
+                console.log(e);
+            })
+        }
     },
     mounted(){
         dbase.collection("reviews").onSnapshot(snap => {
@@ -210,8 +212,6 @@ export default {
                         ...val,
                         documentId,
                     };
-                    console.log('val', val);
-                    console.log(this.prodId)
                     this.commentsList = [...this.commentsList.filter(el => el.id !== val.id), val];
                     this.commentsList = [...this.commentsList.filter(el => el.prodId === this.prodId)];
                 }
@@ -391,7 +391,22 @@ export default {
     /* color: blue; */
     cursor: pointer;
 }
+/****************************************************************************** */
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 414px)
 
+and (-webkit-min-device-pixel-ratio: 2) {
+.review{
+    display: grid;
+    place-items: center;
+}
+.review-title-stars{
+    display: grid;
+    place-items: center;
+}
+}
+/****************************************************************************** */
 @font-face {
   font-family: 'icomoon';
   src:  url('../assets/fonts/icomoon.eot?jvjlod');
