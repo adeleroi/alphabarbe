@@ -23,7 +23,6 @@ import {mapGetters, mapState} from 'vuex'
 export default {
   name: "Ask",
   methods:{
-    ...mapActions(['retrieveArticles', 'retrieveCart', 'retrieveUserInfoAndCart', 'retrieveTempCart']),
     addCurrentCartItems(){
       const collectionId = this.getUid || Cookies.get('userId');
       const batch = dbase.batch();

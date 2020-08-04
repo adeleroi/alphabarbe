@@ -2,7 +2,7 @@
   <div class="home-container">
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
   <h1 class="home-title">
-    Our products
+    Our products will
   </h1>
     <Products/>
     <submit/>
