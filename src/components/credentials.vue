@@ -179,7 +179,6 @@ export default {
                     }
                 })
             }
-            // console.log('kenef le menteur');
         },
         connect(){
             if(!this.login){

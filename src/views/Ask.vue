@@ -19,9 +19,11 @@ import "firebase/database"
 import Cookies from 'js-cookie'
 import {v4 as uuidv4} from 'uuid'
 import {mapGetters, mapState} from 'vuex'
+
 export default {
   name: "Ask",
   methods:{
+    ...mapActions(['retrieveArticles', 'retrieveCart', 'retrieveUserInfoAndCart', 'retrieveTempCart']),
     addCurrentCartItems(){
       const collectionId = this.getUid || Cookies.get('userId');
       const batch = dbase.batch();
@@ -41,7 +43,7 @@ export default {
   computed:{
     ...mapState(['tempCart']),
     ...mapGetters(['getCartCount', 'getCartItems', 'getUid'])
-  }
+  },
 
 }
 </script>
@@ -49,13 +51,10 @@ export default {
 <style>
 .ask-container{
   min-height: 432px;
-  /* margin-top: 200px; */
   display: grid;
   place-items: center;
 }
-.ask-btn-yes-no{
 
-}
 .ask-btn-yes {
     border-radius: 5px;
     width: 100px;

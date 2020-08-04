@@ -3,9 +3,9 @@
       <Product class="for-article-prod" v-bind:productId="ID"/>
   </div>
 </template>
-
 <script>
 import Product from "../components/Product.vue"
+
 export default {
     name: "Article",
     components: {
@@ -28,13 +28,12 @@ export default {
     },
     watch:{
         slug:function(){
-            this.$router.go();
+            this.$router.go(0);
         }
     },
     beforeMounted(){
         document.getElementsByClassName("products-list")[0].classList.add("for-article-prod")
-    }
-
+    },
 }
 </script>
 
@@ -42,7 +41,6 @@ export default {
 .for-article-prod{
     display: flex;
     justify-content: left;
-    /* background-color: red; */
 }
 
 </style>

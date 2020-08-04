@@ -136,7 +136,9 @@ export default {
         const found = this.cart.find(el => {
           return el.prodId === prod.prodId;
         })
-        dbase.collection(Cookies.get('collectionId'))
+        const collectionId = this.getUserEmail? Cookies.get('userId'): Cookies.get('collectionId');
+        console.log(collectionId);
+        dbase.collection(collectionId)
         .doc(found.documentId).delete();
         this.removeOneProductFromCart(prod);
         

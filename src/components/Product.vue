@@ -7,7 +7,6 @@
           </div>
           <div class="product-detail">
             <div class="product-name-price">
-              <!-- <h2 class="product-type-name">{{product.description}}</h2> -->
               <h1 class="product-name">{{product.name}}</h1>
               <p class="product-price">${{product.price}}</p>
             </div>
@@ -140,9 +139,7 @@ export default {
     min-width: 300px;
     width: 850px;
 }
-.product-price{
 
-}
 /*************************************************************************** */
 @media only screen 
 and (min-device-width: 320px) 
@@ -166,10 +163,7 @@ and (-webkit-min-device-pixel-ratio: 2) {
     flex-direction: column;
     justify-content: center;
 }
-.product-name-price{
-    /* display: flex;
-    width: 100%; */
-}
+
 .product-name{
     display: flex;
     align-self: center;
@@ -181,12 +175,7 @@ and (-webkit-min-device-pixel-ratio: 2) {
     margin-right: 263px;
     margin-left: 161px;
 }
-.product-descrip-info{
 
-}
-.product-quantity-addtocart{
-
-}
 .product-addtocart-btn {
     margin-left: 229px;
 }
