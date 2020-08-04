@@ -69,7 +69,7 @@
 <script>
 import firebase from "firebase/app"
 import "firebase/auth"
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import Cookies from "js-cookie"
 
 export default {
@@ -82,13 +82,21 @@ export default {
     },
     methods:{
       ...mapMutations(['clearCart']),
+      ...mapActions({
+        retrieveUserInfo: "retrieveUserInfo",
+        retrieveCart: "retrieveCart"
+      }),
       logOut(){
         firebase.auth().signOut().then(
-          res => console.log(res)
+          () => { 
+            console.log("user signout")
+            Cookies.remove('userId');
+            this.retrieveUserInfo();
+            this.clearCart();
+            // this.retrieveCart();
+          }
         );
-        this.clearCart;
-        Cookies.remove('userId');
-        this.$router.push('/login', ()=> this.$router.go(0));
+        this.$router.push('/login');
       }
     },
     computed: {
@@ -212,6 +220,7 @@ export default {
   border-radius: 5px;
   /* padding: 10px; */
   box-shadow: 2px 2px 10px #24292e/*rgb(104, 13, 104)*/;
+  background-color: white;
 }
 .nav-login-items{
   display: flex;
@@ -223,6 +232,7 @@ export default {
   align-self: center;
   list-style: none;
   /* margin: 0; */
+  /* background-color: white; */
 }
 .nav-login-item:hover{
   background-color: #24292e/*rgb(104, 13, 104)*/;
@@ -281,8 +291,7 @@ export default {
   .hamburgerline::after {
     transform: translateY(10px)
   }
-  .hamburger.active {
-  }
+
   .hamburger.active  .hamburgerline {
     background: transparent;
     /* background-color: blue; */
@@ -324,9 +333,7 @@ export default {
     justify-content:left;
     margin-left: 70px;
   }
-  .nav-item-msg{
-    
-  }
+
   .nav-items{
     display: none;
   }

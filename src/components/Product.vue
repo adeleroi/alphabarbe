@@ -40,7 +40,7 @@
 
 <script>
 import Review from './Review'
-import {mapState} from 'vuex'
+import {mapState, mapActions, mapMutations} from 'vuex'
 import Cookies from "js-cookie"
 import dbase from '../assets/firebaseConfig/firebaseInit'
 import "firebase/database"
@@ -61,6 +61,10 @@ export default {
         productId: String,
     },
     methods:{
+        ...mapActions({
+            retrieveCart: "retrieveCart"
+        }),
+        ...mapMutations(['addToCart']),
         addCart(){
             let article = this.product;
             article = {
@@ -71,37 +75,46 @@ export default {
             const find = this.cart.find(el => 
                 el.prodId === article.prodId
             )
-            console.log('find', find);
+            
             if(!Cookies.get('collectionId') && !Cookies.get('userId')){
                 const collectionId = uuidv4();
                 dbase.collection(collectionId).add(article).then(x => {
                     if(x.id){
                         Cookies.set('collectionId', collectionId, {expires: 7});
+                        this.retrieveCart();
                     }
                 })
             }else if(Cookies.get('collectionId') && !Cookies.get('userId')){
                 if(!find){
                     dbase.collection(Cookies.get('collectionId')).add(article).then(x => {
                         console.log('addToCart: ', x);
+                        this.retrieveCart();
+
                     })
                 }else{
                     dbase.collection(Cookies.get('collectionId'))
                     .doc(find.documentId).update({
                         qty: Number(find.qty + this.qty)
+                    }).then(()=> {
+                        this.retrieveCart();
                     })
                 }
             }else if(Cookies.get('userId')){
                 const collectionId = Cookies.get('userId');
                 if(!find){
                     dbase.collection(collectionId).add(article).then(x => {
-                        console.log('article ajoute au panier de l utilisateur', x)
+                        console.log('article ajoute au panier de l utilisateur', x);
+                        this.retrieveCart();
                     })
                 }else{
                     dbase.collection(collectionId).doc(find.documentId).update({
                         qty: Number(article.qty)
+                    }).then(() => {
+                        this.retrieveCart();
                     })
                 }
             }
+            
             this.$router.push(`/categories/${article.name}/${article.prodId}`)
         }
     },

@@ -18,11 +18,14 @@ import dbase from '../assets/firebaseConfig/firebaseInit'
 import "firebase/database"
 import Cookies from 'js-cookie'
 import {v4 as uuidv4} from 'uuid'
-import {mapGetters, mapState} from 'vuex'
+import {mapGetters, mapState, mapActions} from 'vuex'
 
 export default {
   name: "Ask",
   methods:{
+      ...mapActions({
+        retrieveUserInfo: "retrieveUserInfo"
+      }),
     addCurrentCartItems(){
       const collectionId = this.getUid || Cookies.get('userId');
       const batch = dbase.batch();
@@ -34,8 +37,14 @@ export default {
         batch.set(ref, this.tempCart[i]);
         batch.delete(rmv);
       }
-      batch.commit();
+      batch.commit().then(
+        () => {
+          this.retrieveUserInfo();
+          this.tempCart = [];
+        }
+      );
       Cookies.remove('collectionId');
+      this.retrieveUserInfoAndCart;
       this.$router.push("/");
     }
   },

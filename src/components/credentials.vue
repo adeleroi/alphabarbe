@@ -76,7 +76,9 @@ export default {
     methods:{
         ...mapActions(
             {
-                retrieveUserInfoAndCart: "retrieveUserInfoAndCart"
+                retrieveUserInfo: "retrieveUserInfo",
+                retrieveTempCart: "retrieveTempCart",
+                retrieveCart: "retrieveCart"
             }
         ),
         isNameValid(value){
@@ -89,7 +91,7 @@ export default {
             /*eslint-disable no-useless-escape*/
             const regex =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
             return regex.test(value)
-        },
+        },// ID: this.id
         isPasswordValid(){
             return this.password === this.confirmPass;
         },
@@ -145,6 +147,9 @@ export default {
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(cred => {
                     Cookies.set('userId', cred.user.uid, {expires: 365})
+                    this.retrieveTempCart();
+                    this.retrieveUserInfo();
+                    // this.retrieveCart();
                     return cred.user.getIdToken();
                 })
                 .then(idToken => {
@@ -163,8 +168,7 @@ export default {
                         if(data.status == "success"){
                             firebase.auth().currentUser.getIdToken(true);
                             if(this.tempCart.length){
-                                this.retrieveUserInfoAndCart();
-                                this.$router.push("/ask", () => this.$router.go(0));
+                                this.$router.push("/ask");
                             }else{
                                 this.$router.push("/");
                             }

@@ -1,6 +1,6 @@
 <template>
   <div class="article-container">
-      <Product class="for-article-prod" v-bind:productId="ID"/>
+      <Product class="for-article-prod" v-bind:productId="id"/>
   </div>
 </template>
 <script>
@@ -23,14 +23,14 @@ export default {
     },
     data(){
         return {
-            ID: this.id
+            // ID: this.id
         }
     },
-    watch:{
-        slug:function(){
-            this.$router.go(0);
-        }
-    },
+    // watch:{
+    //     slug:function(){
+    //         this.$router.go(0);
+    //     }
+    // },
     beforeMounted(){
         document.getElementsByClassName("products-list")[0].classList.add("for-article-prod")
     },

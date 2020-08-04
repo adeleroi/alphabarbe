@@ -3,9 +3,6 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import {mapState, mapMutations, mapActions} from 'vuex'
-// import dbStore from "./assets/firebaseConfig/firebaseInit"
-// import "firebase/database"
-// import Cookies from "js-cookie"
 Vue.config.productionTip = false;
 
 new Vue({
@@ -20,20 +17,16 @@ new Vue({
   },
   methods:{
     ...mapMutations(['addToCart']),
-    ...mapActions(['retrieveArticles', 'retrieveCart', 'retrieveUserInfoAndCart', 'retrieveTempCart']),
-    // retrieveAll(){
-    //   this.retrieveArticles();
-    //   if(Cookies.get('collectionId')){
-    //     this.retrieveCart();
-    //   }
-    // }
+    ...mapActions(['retrieveArticles', 'retrieveCart', 'retrieveUserInfo']),
+
   },
   computed: {
     ...mapState(['articles', 'cart']),
   },
   created(){
     this.retrieveArticles();
-    this.retrieveUserInfoAndCart();
-    this.retrieveTempCart();
+    this.retrieveUserInfo();
+    // this.retrieveCart();
+
   }
 }).$mount("#app");

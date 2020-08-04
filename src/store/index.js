@@ -174,7 +174,7 @@ export default new Vuex.Store({
                     // val = {
                     //     ...val,
                     // };
-                    // console.log(val);
+                    console.log(val);
                     context.commit('fetchArticles', {...val});
                 }
             })
@@ -183,23 +183,26 @@ export default new Vuex.Store({
     retrieveCart(context){
         const toggle = context.state.username;
         const collectionId = toggle ? context.state.uid: Cookies.get('collectionId');
-        console.log('username',toggle);
-        dbStore.collection(collectionId).onSnapshot(snap =>{
-            let rawDocs = snap.docChanges();
-            rawDocs.forEach(rawDoc => {
-                console.log(rawDoc);
-                if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
-                    let val = rawDoc.doc.data();
-                    const documentId = rawDoc.doc.id;
-                    val = {
-                        ...val,
-                        documentId,
-                    };
-                    // console.log(val);
-                    context.commit('fetchCart', {...val});
-                }
+        console.log("retrieve cart called", toggle);
+        if(collectionId){
+            console.log('username',collectionId);
+            dbStore.collection(collectionId).onSnapshot(snap =>{
+                let rawDocs = snap.docChanges();
+                rawDocs.forEach(rawDoc => {
+                    console.log(rawDoc);
+                    if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
+                        let val = rawDoc.doc.data();
+                        const documentId = rawDoc.doc.id;
+                        val = {
+                            ...val,
+                            documentId,
+                        };
+                        // console.log(val);
+                        context.commit('fetchCart', {...val});
+                    }
+                })
             })
-        })
+        }
     },
     retrieveTempCart(context){
         if(Cookies.get('collectionId')){
@@ -222,16 +225,19 @@ export default new Vuex.Store({
         }
     },
     /*eslint-disable no-unused-vars*/
-    retrieveUserInfoAndCart(context){
+    retrieveUserInfo(context){
         firebase.auth().onAuthStateChanged(user => {
             console.log('retrieveUsername', user);
             if(user){
                 context.state.username = user.displayName;
                 context.state.emailaddress = user.email;
                 context.state.uid = user.uid;
+            }else{
+                context.state.username = '';
+                context.state.emailaddress = '';
+                context.state.uid = '';            
             }
             context.dispatch('retrieveCart');
-
         })
     }
     /*eslint-unable no-unused-vars*/
