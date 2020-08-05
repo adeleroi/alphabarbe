@@ -23,11 +23,11 @@ export default new Vuex.Store({
   },
   mutations: {
     fetchArticles(currentState, payload){
+        console.log("articles", payload.name)
         currentState.articles.push(payload);
     },
     fetchCart(currentState, payload){
         const found = currentState.cart.find(el => el.prodId === payload.prodId);
-        // console.log('found', found);
         if(!found){
             currentState.cart.push(payload);
         }else{
@@ -44,7 +44,6 @@ export default new Vuex.Store({
     },
     fetchComment(currentState, payload){
         const found = currentState.comments.find(el => el.date === payload.date && el.username === payload.username);
-        // console.log('fetchComment', found);
         if(!found){
             currentState.comments.push(payload);
         }else{
@@ -166,15 +165,9 @@ export default new Vuex.Store({
     retrieveArticles(context){
         dbStore.collection("articles").onSnapshot(snap =>{
             let rawDocs = snap.docChanges();
-            // console.log(rawDocs);
             rawDocs.forEach(rawDoc => {
                 if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
-                    // console.log(rawDoc.doc.data());
                     let val = rawDoc.doc.data();
-                    // val = {
-                    //     ...val,
-                    // };
-                    console.log(val);
                     context.commit('fetchArticles', {...val});
                 }
             })
@@ -183,13 +176,13 @@ export default new Vuex.Store({
     retrieveCart(context){
         const toggle = context.state.username;
         const collectionId = toggle ? context.state.uid: Cookies.get('collectionId');
-        console.log("retrieve cart called", toggle);
+        // console.log("retrieve cart called", toggle);
         if(collectionId){
-            console.log('username',collectionId);
+            // console.log('username',collectionId);
             dbStore.collection(collectionId).onSnapshot(snap =>{
                 let rawDocs = snap.docChanges();
                 rawDocs.forEach(rawDoc => {
-                    console.log(rawDoc);
+                    // console.log(rawDoc);
                     if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
                         let val = rawDoc.doc.data();
                         const documentId = rawDoc.doc.id;
@@ -197,7 +190,6 @@ export default new Vuex.Store({
                             ...val,
                             documentId,
                         };
-                        // console.log(val);
                         context.commit('fetchCart', {...val});
                     }
                 })
@@ -249,7 +241,6 @@ export default new Vuex.Store({
             if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
                 let val = rawDoc.doc.data();
                 context.commit('fetchComment', {...val});
-                // console.log("val", val)
             }
         })
     })

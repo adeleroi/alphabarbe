@@ -1,9 +1,9 @@
 <template>
     <div class="review">
-      <div class="review-title-stars">
+      <!-- <div class="review-title-stars"> -->
           <h2 class="review-title">Clients Reviews</h2>
-          <div class="stars"></div>
-      </div>
+          <!-- <div class="stars"></div>
+      </div> -->
       <div class="review-btn-comments">
             <span class="review-btn-msg" v-if="showReviewBtn" @click="displayComment = !displayComment">{{reviewMsg}}</span>
         <div action="" class="review-submit-review" v-if="displayComment" >
@@ -31,7 +31,7 @@
                         class="review-dots" 
                         v-if="getUsername == review.username" 
                         @click="toggleVisibility(review.id.slice(2,23))" style="cursor: pointer"
-                        :id="review.id.slice(7,28)">
+                        :id="review.id.slice(7,28)" v-clik-outside="">
                         ...
                         </span>
                         <i class="icon-send" @click="updateComment(review.id)" v-if="dispIcon == review.id"></i>
@@ -41,7 +41,7 @@
                         Press esc to 
                         <span style="color: blue; cursor: pointer" @click="escape(review.id)">cancel</span>
                     </label>
-                    <div class="review-display-content" :id="review.id.slice(2,23)" style="display: none">
+                    <div class="review-display-content" :id="review.id.slice(2,23)" style="visibility: hidden">
                         <ul class="review-display-items">
                             <li class="review-display-item" @click="edit(review.id)">Edit</li>
                             <li class="review-display-item" @click="removeComment(review.id)">Delete</li>
@@ -151,13 +151,17 @@ export default {
         },
         toggleVisibility(id){
             const el = document.getElementById(id);
-            console.log(el.style.display);
-            if(el.style.display == "bolck"){
-                el.style.display = "none"
+            // console.log(el.style.display);
+            // const id2 = id.slice(2,23);
+            // var el2 = document.getElementById(id2);
+            el.style.display = 'none';
+
+            if(el.style.visibility == "visible"){
+                el.style.display = "hidden"
             }else{
-                el.style.display = "block"
+                el.style.display = "visible"
             }
-            console.log(el);
+            // console.log(el);
         },
         escape(id, val=true){
             if(val){
@@ -225,25 +229,19 @@ export default {
 <style >
 
 .review{
-    display: flex;
-    flex-direction: row;
     border-top: 1px solid #ccc;
     padding-top:30px;
     margin: 0 80px 0 80px;
-}
-.review-title-stars{
-    display: flex;
-    flex-direction: column;
-    width: 400px;
+    width: 100%;
 }
 .review-title{
     text-align: left;
-    /* margin-left: 30px; */
+    margin-left: 80px;
     margin-top: 0;
 }
 .review-btn-comments{
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    place-items: center;
 }
 .review-items{
     display: flex;
@@ -267,21 +265,16 @@ export default {
     position: absolute;
     left: 100px;
     top: 56px;
-    /* display: none; */
-    /* background-color: whitesmoke; */
-
 }
 .review-dots{
     display: flex;
     align-self: center;
     margin-left: 10px;
-    /* position: relative; */
 }
 .review-dots.deactive{
     display: none;
 }
 .review-display-items{
-    /* position: absolute; */
     display: flex;
     flex-direction: column;
     list-style: none;
@@ -304,14 +297,12 @@ export default {
     cursor: pointer;
 }
 .review-comment-msg{
-    /* display: flex; */
     border: 1px solid #ccc;
     border-radius: 25px;
     margin: 20px 0 20px 0;
     padding: 20px 10px 20px 10px;
     text-align: left;
     max-width: 400px;
-    /* outline: none; */
     min-width: 100px;
 }
 .review-comment-msg.review-container-msg{
@@ -325,7 +316,6 @@ export default {
     border: 1px solid #ccc;
     border-radius: 25px;
     margin: 20px 0 20px 0;
-    /* background-color: red; */
     padding-right: 25px;
 }
 .comment{
@@ -341,7 +331,6 @@ export default {
     margin-bottom: 6px;
     left: 19px
 }
-/********************** */
 
 .review-container{
   border: 1px solid  rgb(88, 86, 86);
@@ -366,7 +355,6 @@ export default {
   display: block;
   width: 100%;
   overflow: hidden;
-  /* resize: right: ; */
   min-height: 40px;
   line-height: 20px;
   
@@ -381,14 +369,12 @@ export default {
     text-decoration: underline;
     cursor: pointer;
     color: purple;
-    /* line-height: 10px; */
     margin-bottom: 20px;
 }
 .icon-send{
     display: flex;
     align-self:flex-end;
     padding-bottom: 10px;
-    /* color: blue; */
     cursor: pointer;
 }
 /****************************************************************************** */

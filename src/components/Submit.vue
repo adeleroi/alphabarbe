@@ -120,7 +120,7 @@ export default {
     background-color: white;
     padding: 0px;
     border-radius: 40px;
-    width: 80%;
+    width: 50%;
     position: relative;
 }
 #btn-submit {
@@ -150,9 +150,7 @@ export default {
     outline: none;
     /* opacity: 0.98; */
 }
-#email:focus{
-    
-}
+
 #email {
     height: 49px;
     -webkit-box-sizing: border-box;

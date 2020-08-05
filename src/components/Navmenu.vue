@@ -55,9 +55,9 @@
       <div class="nav-user-section" v-if="getUsername">
         <i class="icon-avatar"></i>
         <span class="nav-username">{{getUsername}}</span>
-        <i class="icon-arrow_drop_down" :class="{active: isActive}" @click="isActive = !isActive"></i>
+        <i class="icon-arrow_drop_down" :class="{active: isActive}" @click.stop="isActive = !isActive"></i>
       </div>
-      <div class="nav-login-menu" v-if="isActive">
+      <div class="nav-login-menu" v-if="isActive" v-click-outside="hide">
         <ul class="nav-login-items">
           <div class="nav-login-item">Profile</div>
           <div class="nav-login-item" @click="logOut">Log out</div>
@@ -86,6 +86,9 @@ export default {
         retrieveUserInfo: "retrieveUserInfo",
         retrieveCart: "retrieveCart"
       }),
+      hide(){
+        this.isActive = false;
+      },
       logOut(){
         firebase.auth().signOut().then(
           () => { 

@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <!-- <div id="nav"> -->
       <Navmenu/>
-    <!-- </div> -->
     <router-view />
     <Footer/>
   </div>
@@ -26,15 +24,11 @@ export default {
   color: #2c3e50;
   height: 100%;
 }
- /* *{
-   margin:0;
-   box-sizing: border-box;
- } */
+
 
 html,body{
   margin:0;
   box-sizing: border-box;
-  /* height: 100%; */
   overflow-x: hidden;
 }
 
