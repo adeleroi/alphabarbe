@@ -9,7 +9,7 @@
         <h2 class="signup-msg" v-else>Log in</h2>
       </div>
       <div class="signup-container">
-        <img src="../assets/product-foragers-keep.png" alt="" class="signup-img">
+        <img src="../assets/product-foragers-keep.png" alt="" class="signup-img mobile">
         <form action="" class="signup-form-data" @submit.prevent="connect">
             <label for="" class="signup-title" v-if="login">What's your name?</label>
             <input type="text" placeholder="Enter you name" v-model.lazy="name" class="signup-username signform" @blur="nameCheck" v-if="login">
@@ -292,5 +292,14 @@ export default {
 }
 .signup-account{
     margin-bottom: 30px;
+}
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 614px)
+
+and (-webkit-min-device-pixel-ratio: 2) {
+.signup-img.mobile{
+    display: none;
+}
 }
 </style>

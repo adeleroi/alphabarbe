@@ -131,4 +131,34 @@ export default {
     display: flex;
     justify-content: center;
 }
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 414px)
+
+and (-webkit-min-device-pixel-ratio: 2) {
+.product-image.review-image {
+    border-bottom: none;
+    margin: 0;
+    width: 48%;
+}
+.product-detail.review-detail {
+    margin: 0px 0px 0px 0px;
+    display: flex;
+    width: 30%;
+    text-align: left;
+}
+.categories-review-btn {
+    display: flex;
+    align-self: center;
+    border: 0.5px solid #0077ed;
+    width: 203px;
+    height: 35px;
+    color: white;
+    font-size: 12px;
+    justify-content: center;
+    border-radius: 35px;
+    background: linear-gradient(to right,#fdde5c,#f8ab5e,#f56a62,#a176c8,#759beb,#65beb3,#70db96);
+    cursor: pointer;
+}
+}
 </style>

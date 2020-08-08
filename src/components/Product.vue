@@ -7,7 +7,7 @@
           </div>
           <div class="product-detail">
             <div class="product-name-price">
-              <h1 class="product-name">{{product.name}}</h1>
+              <h1 class="product-name mobile">{{product.name}}</h1>
               <p class="product-price">${{product.price}}</p>
             </div>
             <div class="product-size">
@@ -29,7 +29,7 @@
   </div>
 
   <div class="product-annexe-products">
-      <h2 class="product-annexe-title" align="left" >
+      <h2 class="product-annexe-title mobile" align="left" >
           Related products
       </h2>
     <products :category="product.category" class="products-edit"/>
@@ -192,10 +192,18 @@ and (-webkit-min-device-pixel-ratio: 2) {
 .product-addtocart-btn {
     margin-left: 229px;
 }
+.product-annexe-title.mobile{
+    margin-left: 0;
+    text-align: center;
+}
+.image{
+    width: 154px;
+    height: 250px;
+}
 }
 /**************************************************************************** */
 .image{
-    width: 220px;
+    width: 200px;
     height: 350px;
 }
 .product-type-name{
@@ -278,6 +286,7 @@ and (-webkit-min-device-pixel-ratio: 2) {
 }
 .product-annexe-title{
     padding-left: 0;
+    margin-left: 100px;
 }
 .product-annexe-products{
     margin: 0 80px 0 80px;
@@ -292,4 +301,6 @@ and (-webkit-min-device-pixel-ratio: 2) {
 .product-description-info{
 text-align: left;
 }
+
+
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div  class="products">
+  <div  class="products mobile">
     <ul  class="products-list for-home">
       <li class="products-item"
         v-for="prod in articles"
@@ -11,9 +11,9 @@
           force: true
         }">
         <div class="product-image">
-          <img :src="prod.url" class="product-img">
+          <img :src="prod.url" class="product-img mobile">
         </div>
-          <p class="products-name">{{prod.name}}</p>
+          <p class="products-name mobile">{{prod.name}}</p>
         </router-link>
         <p class="products-price">${{prod.price}}</p>
       </li> 
@@ -102,8 +102,16 @@ and (min-device-width: 320px)
 and (max-device-width: 614px)
 
 and (-webkit-min-device-pixel-ratio: 2) {
-.products{
+.products.mobile{
   min-height: 523px;
+  margin: 0;
+}
+.product-name.mobile{
+  font-size: 12px;
+}
+.product-img{
+  width: 86px;
+  height: 209px
 }
 }
 </style>

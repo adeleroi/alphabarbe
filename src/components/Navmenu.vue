@@ -1,16 +1,28 @@
 <template>
   <div class="navmenu">
-      <div @click="showMenu = !showMenu" v-bind:class="{active:showMenu}" class="hamburger">
-        <div class="hamburgerline" ref="openMenu"></div>
+    <div class="navmenu-mobile">
+      <div class="hamburger-logo">
+        <div class="mobile">
+          <div @click="showMenu = !showMenu" v-bind:class="{active:showMenu}" class="hamburger">
+            <div class="hamburgerline" ref="openMenu"></div>
+          </div>
+          <div class="nav-mobile nav-logo" >
+            <router-link to='/' class="nav-logo" title="Go to homepage">
+            <span class="nav-logo-drink">Drink</span>
+            </router-link>
+          </div>
       </div>
-      <!-- <div class="nav-mobile nav-logo" >
-        <router-link to='/' class="nav-logo" title="Go to homepage">Koutoukou
-        <span style="color:white;font-family:'Rock Salt', cursive; font-weight:normal;font-size: 24px">Drink</span>
+      <div class="nav-item nav-cart mobilecart">
+        <router-link to='/cart' class="nav-cart-link">
+          <i class="icon-cart"></i>
         </router-link>
-      </div> -->
+        <span class="nav-class-qty mobile" v-if="getCartCount">{{getCartCount}}</span>
+      </div>
+      </div>  
+    </div>
       <div class="nav-items" :class="{navmobile: showMenu}" >
-          <div class="nav-item nav-logo" v-if="!showMenu">
-            <router-link to='/' class="nav-logo" title="Go to homepage">Koutoukou
+          <div class="nav-item nav-logo" :class="{mobile: showMenu}">
+            <router-link to='/' class="nav-logo" title="Go to homepage"> KOUTOUKOU
             <span class="nav-logo-drink">Drink</span>
             </router-link>
           </div>
@@ -203,7 +215,7 @@ export default {
   border: 2px solid white;
   border-radius: 50%;
   width: 31px;
-  height: 33px;
+  height: 33px
 }
 .icon-arrow_drop_down{
   display: flex;
@@ -249,12 +261,18 @@ export default {
 .nav-mobile{
   visibility: hidden;
 }
+.navmenu-mobile{
+  display: none;
+}
 /****************************************************************************** */
   @media only screen 
   and (min-device-width: 320px) 
   and (max-device-width: 614px)
 
   and (-webkit-min-device-pixel-ratio: 2) {
+  .hamburger-logo{
+    display: flex;
+  }
   .hamburger {
     position: relative;
     left: 0;
@@ -263,10 +281,10 @@ export default {
     justify-content: center;
     /* margin-right: 18.45px; */
     width: 48px;
-    height: 48px;
+    height: 39px;
     transition: all .5s ease-in-out;
     /* background: url(./pictures/hamburger.png); */
-    z-index: 4;
+    z-index: 5;
   }
   .hamburgerline {
     position: absolute;
@@ -284,7 +302,7 @@ export default {
     position: absolute;
     width: 25px;
     height: 3px;
-    left: 0;
+    right: 0;
     background-color: white;
     transition: all .3s ease-in-out;
   }
@@ -307,18 +325,23 @@ export default {
     transform: rotate(-45deg);
     background-color: white;
   }
+  .mobile{
+    display: block;
+  }
   .nav-items.navmobile{
-    position: absolute;
+    position: fixed;
     left: 0;
-    top:48px;
+    top:0;
+    padding-top: 45px;
     height: 100%;
     display: flex;
     flex-direction: column;
     color: black;
     transition: all 0.8s cubic-bezier(1, 0, 0, 0);
     background-color: black;
-    height: 800px;
-    width: 100%;
+    height: 100%;
+    width: 80%;
+    z-index: 4;
   }
   .nav-item{
     /* position: absolute; */
@@ -336,12 +359,23 @@ export default {
     justify-content:left;
     margin-left: 70px;
   }
-
+  .nav-item.mobilecart{
+    left: 83%;
+    position: absolute;
+    margin: 0 0 0 0;
+  }
+  .nav-class-qty.mobile{
+    top: 6px;
+    left: 100%;
+  }
+  .nav-cart.mobile{
+    display: none;
+  }
   .nav-items{
     display: none;
   }
   .navmenu{
-    position:  relative;
+    position: relative;
     display: flex;
     justify-content: left;
     padding-left: 20px;
@@ -353,6 +387,22 @@ export default {
    visibility: visible;
    color: red;
     font-size: 10px;
+    position: absolute;
+    display: flex;
+    top: 2px;
+    left: 31px;
+  }
+  .nav-logo-drink{
+  color:white;font-family:'Rock Salt', cursive; font-weight:normal;font-size: 14px;
+  }
+  .navmenu-mobile{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    
+  }
+  .nav-item.nav-logo.mobile{
+    display: none;
   }
 }
 /******************************************************************************* */

@@ -2,7 +2,7 @@
     <div class="submit-container">
         <div class="submit-shadow"></div>
         <div class="submit" id="contact">
-                <span class="preamble-question">Join our community</span>
+                <span class="preamble-question mobile">Join our community</span>
                 <!-- <span class="preamble-recommendation">Stay in touch with us for releases, demos, and updates.</span> -->
                 <div class="submit-invalid-email" v-if="isEmailBad"> Your email doesn't look right...</div>
             <div class="submit-registration">
@@ -171,5 +171,32 @@ export default {
     line-height: 28px;
     text-align: center;
     color: #fff;
+}
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 614px)
+
+and (-webkit-min-device-pixel-ratio: 2) {
+.preamble-question.mobile{
+    font-size: 16px
+}
+.submit-shadow, .submit-container{
+    width: 100%;
+}
+.submit{
+    width: 100%;
+    height: 200px;
+}
+.submit-registration{
+    width: 97%;
+}
+#btn-submit {
+    height: 40px;
+    width: 80px;
+}
+#email{
+    height: 42px;
+    font-size: 14px;;
+}
 }
 </style>
