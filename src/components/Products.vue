@@ -78,7 +78,7 @@ a{
 
 }
 .product-image{
-  margin: 35px;
+  margin: 0px;
 }
 .product-img {
   width: 130px; /*170*/
@@ -106,13 +106,13 @@ and (-webkit-min-device-pixel-ratio: 2) {
   min-height: 523px;
   margin: 0;
 }
-.product-name.mobile{
+.products-name.mobile{
   font-size: 12px;
+  width: 90px;
 }
 .product-img.mobile{
   width: 86px;
   height: 209px;
-  display: inline;
 }
 }
 </style>

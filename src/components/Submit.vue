@@ -181,7 +181,7 @@ and (-webkit-min-device-pixel-ratio: 2) {
     font-size: 16px
 }
 .submit-shadow{
-    height: 80%;
+    height: 79%;
     width: 100%;
 }
 .submit-container{

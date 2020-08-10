@@ -5,7 +5,7 @@
         <div class="product-image review-image">
               <img :src="product.url" alt="" class="image review">
         </div>
-        <div class="product-detail review-detail">
+        <div class="product-detail review-detail mobile">
             <div class="product-name-price review-name-price">
                 <h2 class="product-type-name review-type-name">{{product.description}}</h2>
                 <h1 class="product-name review-name">{{product.name}}</h1>
@@ -133,21 +133,21 @@ export default {
 }
 @media only screen 
 and (min-device-width: 320px) 
-and (max-device-width: 414px)
+and (max-device-width: 614px)
 
 and (-webkit-min-device-pixel-ratio: 2) {
-.product-image.review-image {
+.product-image.review-image.mobile {
     border-bottom: none;
     margin: 0;
     width: 48%;
 }
-.product-detail.review-detail {
+.product-detail.review-detail.mobile {
     margin: 0px 0px 0px 0px;
     display: flex;
     width: 30%;
     text-align: left;
 }
-.categories-review-btn {
+.categories-review-btn.mobile {
     display: flex;
     align-self: center;
     border: 0.5px solid #0077ed;
@@ -159,6 +159,12 @@ and (-webkit-min-device-pixel-ratio: 2) {
     border-radius: 35px;
     background: linear-gradient(to right,#fdde5c,#f8ab5e,#f56a62,#a176c8,#759beb,#65beb3,#70db96);
     cursor: pointer;
+}
+.product-detail.mobile{
+    display: none;
+}
+.categories-msg{
+    font-size: 24px;
 }
 }
 </style>

@@ -402,10 +402,10 @@ and (-webkit-min-device-pixel-ratio: 2) {
 .review{
     display: grid;
     place-items: center;
+    margin-bottom: 50px;
 }
 .review-title-stars{
-    /* display: grid;
-    place-items: center; */
+    width: 181px;
 }
 }
 /****************************************************************************** */

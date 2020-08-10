@@ -26,7 +26,7 @@
             <span class="nav-logo-drink">Drink</span>
             </router-link>
           </div>
-          <div class="nav-item" :class="{mobile: showMenu}">
+          <div class="nav-item" :class="{mobile: showMenu}" @click="hideMobileMenu">
             <router-link :to="{
               name: 'Articles',
               params:{slug: 'vodka'}
@@ -34,7 +34,7 @@
               <span class="nav-item-msg">Vodka</span>
             </router-link>
           </div>
-          <div class="nav-item" :class="{mobile: showMenu}">
+          <div class="nav-item" :class="{mobile: showMenu}" @click="hideMobileMenu">
             <router-link :to="{
               name: 'Articles',
               params:{slug: 'whiskey'}
@@ -42,7 +42,7 @@
               <span class="nav-item-msg">Whiskey</span>
             </router-link>
           </div>
-          <div class="nav-item" :class="{mobile: showMenu}">
+          <div class="nav-item" :class="{mobile: showMenu}" @click="hideMobileMenu">
             <router-link :to="{
               name: 'Articles',
               params:{slug: 'gin'}
@@ -50,14 +50,14 @@
               <span class="nav-item-msg">Gin</span>
             </router-link>
           </div>
-          <div class="nav-item" :class="{mobile: showMenu}">
+          <div class="nav-item" :class="{mobile: showMenu}" @click="hideMobileMenu">
             <router-link :to="{
               name: 'Signup',
             }">
               <span class="nav-item-msg" v-if="!getUsername">Sign up</span>
             </router-link>
           </div>
-          <div class="nav-item nav-cart" :class="{mobile: showMenu}">
+          <div class="nav-item nav-cart" :class="{mobile: showMenu}" @click="hideMobileMenu">
             <router-link to='/cart' class="nav-cart-link">
               <i class="icon-cart"></i>
             </router-link>
@@ -100,6 +100,12 @@ export default {
       }),
       hide(){
         this.isActive = false;
+      },
+      hideMobileMenu(){
+        const navMenu = document.getElementsByClassName("navmobile");
+        navMenu[0].classList.remove("navmobile");
+        const hamburgerActive = document.getElementsByClassName("active");
+        hamburgerActive[0].classList.remove("active");
       },
       logOut(){
         firebase.auth().signOut().then(
@@ -367,6 +373,7 @@ export default {
   .nav-class-qty.mobile{
     top: 6px;
     left: 100%;
+    font-weight: bold;
   }
   .nav-cart.mobile{
     display: none;

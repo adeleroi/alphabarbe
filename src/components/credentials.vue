@@ -301,5 +301,13 @@ and (-webkit-min-device-pixel-ratio: 2) {
 .signup-img.mobile{
     display: none;
 }
+.signup-form-data{
+    /* padding-left: 10%; */
+    display: grid;
+    place-items: center;
+}
+.signform{
+    width: 85%;
+}
 }
 </style>
