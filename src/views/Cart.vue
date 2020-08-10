@@ -345,4 +345,31 @@ export default {
 .space{
   margin-bottom: 15px;
 }
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 614px)
+
+and (-webkit-min-device-pixel-ratio: 2) {
+.cart-container, .cart-product-presentation{
+  flex-direction: column;
+}
+.cart-product-name{
+  font-size: 10px;
+  display: grid;
+  place-items: center;
+}
+.cart-option{
+  justify-content: space-between;
+}
+.cart-total-total{
+  font-size: 16px;
+  margin-bottom: 60px;;
+}
+.cart-products{
+  padding: 0;
+}
+.cart-product-name > h1{
+  margin-bottom: 0;
+}
+}
 </style>

@@ -78,7 +78,7 @@ export default {
     justify-content: center;
     left: 0%;
     height: 336px;
-    background: #69977C;
+    /* background: #69977C; */
     background-image: url("../assets/photo-1594401333633-598ef7c1e801.jpeg");
     background-repeat: no-repeat;
     background-position: 100%;
@@ -180,23 +180,32 @@ and (-webkit-min-device-pixel-ratio: 2) {
 .preamble-question.mobile{
     font-size: 16px
 }
-.submit-shadow, .submit-container{
+.submit-shadow{
+    height: 80%;
+    width: 100%;
+}
+.submit-container{
     width: 100%;
 }
 .submit{
     width: 100%;
-    height: 200px;
+    height: 220px;
+    background-image: url("../assets/photo-1594401333633-598ef7c1e801.jpeg");
+    background-repeat: no-repeat;
+    background-position: 100%;
+    background-size: cover;
 }
 .submit-registration{
-    width: 97%;
+    width: 90%;
 }
 #btn-submit {
     height: 40px;
-    width: 80px;
+    width: 68px;
 }
 #email{
     height: 42px;
     font-size: 14px;;
 }
+
 }
 </style>

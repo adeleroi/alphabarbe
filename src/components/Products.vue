@@ -109,9 +109,10 @@ and (-webkit-min-device-pixel-ratio: 2) {
 .product-name.mobile{
   font-size: 12px;
 }
-.product-img{
+.product-img.mobile{
   width: 86px;
-  height: 209px
+  height: 209px;
+  display: inline;
 }
 }
 </style>

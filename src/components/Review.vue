@@ -229,13 +229,14 @@ export default {
     flex-direction: row;
     border-top: 1px solid #ccc;
     padding-top:30px;
-    margin: 0 80px 0 80px;
-    width: 100%;
+    margin: 0 0px 0 0px;
+    width: 73%;
 }
 .review-title-stars{
     display: flex;
     flex-direction: column;
     width: 400px;
+
 }
 .review-title{
     text-align: left;
