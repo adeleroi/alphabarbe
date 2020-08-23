@@ -3,11 +3,13 @@
     <div class="ask-btn-yes-no">
     <h2>Do you want to add the current cart's items to your cart?</h2>
       <button class="ask-btn-yes" @click="addCurrentCartItems">yes</button>
-      <button class="ask-btn-yes" @click="addCurrentCartItems">
-            <router-link :to="{
+      <button class="ask-btn-yes" @click="continueWithNewCart">
+            <!-- <router-link :to="{
         name: 'Home',
-      }" class="ask-no-btn">No</router-link></button>
-      <!-- <button class="ask-btn-no">no</button> -->
+      }" class="ask-no-btn"> -->
+      No
+      <!-- </router-link> -->
+      </button>
 
     </div>
   </div>
@@ -18,11 +20,14 @@ import dbase from '../assets/firebaseConfig/firebaseInit'
 import "firebase/database"
 import Cookies from 'js-cookie'
 import {v4 as uuidv4} from 'uuid'
-import {mapGetters, mapState, mapActions} from 'vuex'
+import {mapGetters, mapState, mapActions, mapMutations} from 'vuex'
 
 export default {
   name: "Ask",
   methods:{
+    ...mapMutations({
+      clearCart: 'clearCart'
+    }),
       ...mapActions({
         retrieveUserInfo: "retrieveUserInfo"
       }),
@@ -46,10 +51,15 @@ export default {
       Cookies.remove('collectionId');
       this.retrieveUserInfoAndCart;
       this.$router.push("/");
+    },
+    continueWithNewCart(){
+      this.clearCart;
+      
+      this.$router.push("/");
     }
   },
   computed:{
-    ...mapState(['tempCart']),
+    ...mapState(['tempCart', 'cart']),
     ...mapGetters(['getCartCount', 'getCartItems', 'getUid'])
   },
 

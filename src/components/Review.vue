@@ -4,6 +4,7 @@
           <h2 class="review-title">Clients Reviews</h2>
           <div class="stars"></div>
       </div>
+      <div class="loading" v-if="!commentsList">Loading...</div>
       <div class="review-btn-comments">
             <span class="review-btn-msg" v-if="showReviewBtn" @click="displayComment = !displayComment">{{reviewMsg}}</span>
         <div action="" class="review-submit-review" v-if="displayComment" >
@@ -73,6 +74,7 @@ export default {
             displayComment: false,
             comment: String,
             commentsList: [],
+            productReviews: [],
             editContent: false,
             displayContentMenu: true,
             review: '',
@@ -116,9 +118,7 @@ export default {
                 comment: comment,
                 stars: 0
             };
-            dbase.collection("reviews").doc(reviewId).set(data).then(cred => {
-                console.log(cred);
-            })
+            dbase.collection("reviews").doc(reviewId).set(data)
             // span.innerHTML = '';
             // this.displayComment = false;
             document.getElementById(id.slice(15,32)).remove();
@@ -151,13 +151,11 @@ export default {
         },
         toggleVisibility(id){
             const el = document.getElementById(id);
-            console.log(el.style.display);
-            if(el.style.display == "bolck"){
+            if(el.style.display == "block"){
                 el.style.display = "none"
             }else{
                 el.style.display = "block"
             }
-            console.log(el);
         },
         escape(id, val=true){
             if(val){
@@ -174,9 +172,22 @@ export default {
             this.editContent = false;
             this.dispIcon = false;
             this.cancel = false;
-        }
+        },
 
+        retrieveReviews(){
+            let list = [];
+            dbase.collection("reviews").where("prodId", "==", this.prodId)
+            .get()
+            .then(function(querySnapshot) {
+                querySnapshot.forEach(function(review){
+                    // console.log(review.data())
+                    list.push(review.data());
+                })
+            })
+            this.commentsList = list;
+        }
     },
+
     computed:{
         ...mapGetters({
             getUsername: 'getUsername'}),
@@ -184,14 +195,32 @@ export default {
             if(!this.displayComment)
                 return "Add review +"; 
             return "Hide review"
+        },
+
+ 
+    },
+    watch:{
+        
+        prodId: function(){
+            let list = [];
+            dbase.collection("reviews").where("prodId", "==", this.prodId)
+            .get()
+            .then(function(querySnapshot) {
+                querySnapshot.forEach(function(review){
+                    // console.log(review.data())
+                    list.push(review.data());
+                })
+            })
+            this.commentsList = list;
         }
+                
         
     },
     created(){
         if(this.getUsername){
             firebase.auth().currentUser.getIdTokenResult(true)
             .then(idTokenResult => {
-                console.log('idTokenResult: ',idTokenResult.claims)
+                // console.log('idTokenResult: ',idTokenResult.claims)
                 if(idTokenResult.claims.registered){
                     this.showReviewBtn = true;
                 }
@@ -202,21 +231,23 @@ export default {
         }
     },
     mounted(){
-        dbase.collection("reviews").onSnapshot(snap => {
-            let rawDocs = snap.docChanges();
-            rawDocs.forEach(rawDoc => {
-                if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
-                    let val = rawDoc.doc.data();
-                    const documentId = rawDoc.doc.id;
-                    val = {
-                        ...val,
-                        documentId,
-                    };
-                    this.commentsList = [...this.commentsList.filter(el => el.id !== val.id), val];
-                    this.commentsList = [...this.commentsList.filter(el => el.prodId === this.prodId)];
-                }
-            })
-        })
+        // dbase.collection("reviews").onSnapshot(snap => {
+        //     let rawDocs = snap.docChanges();
+        //     rawDocs.forEach(rawDoc => {
+        //         if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
+        //             let val = rawDoc.doc.data();
+        //             const documentId = rawDoc.doc.id;
+        //             val = {
+        //                 ...val,
+        //                 documentId,
+        //             };
+        //             this.commentsList = [...this.commentsList.filter(el => el.id !== val.id), val];
+        //             this.commentsList = [...this.commentsList.filter(el => el.prodId === this.prodId)];
+
+        //         }
+        //     })
+        // });
+        this.retrieveReviews();
     }
 
 }

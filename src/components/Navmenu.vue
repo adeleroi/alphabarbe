@@ -102,10 +102,12 @@ export default {
         this.isActive = false;
       },
       hideMobileMenu(){
+        if(window.innerWidth < 768){
         const navMenu = document.getElementsByClassName("navmobile");
         navMenu[0].classList.remove("navmobile");
         const hamburgerActive = document.getElementsByClassName("active");
         hamburgerActive[0].classList.remove("active");
+        }
       },
       logOut(){
         firebase.auth().signOut().then(

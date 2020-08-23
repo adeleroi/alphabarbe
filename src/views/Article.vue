@@ -42,5 +42,7 @@ export default {
     display: flex;
     justify-content: left;
 }
-
+.article-container{
+    min-height: 223px;;
+}
 </style>

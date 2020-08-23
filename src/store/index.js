@@ -23,7 +23,7 @@ export default new Vuex.Store({
   },
   mutations: {
     fetchArticles(currentState, payload){
-        console.log("articles", payload.name)
+        // console.log("articles", payload.name)
         currentState.articles.push(payload);
     },
     fetchCart(currentState, payload){
@@ -209,7 +209,7 @@ export default new Vuex.Store({
                             ...val,
                             documentId,
                         };
-                        console.log(val);
+                        // console.log(val);
                         context.commit('fetchTempCart', {...val});
                     }
                 })
@@ -219,7 +219,7 @@ export default new Vuex.Store({
     /*eslint-disable no-unused-vars*/
     retrieveUserInfo(context){
         firebase.auth().onAuthStateChanged(user => {
-            console.log('retrieveUsername', user);
+            // console.log('retrieveUsername', user);
             if(user){
                 context.state.username = user.displayName;
                 context.state.emailaddress = user.email;

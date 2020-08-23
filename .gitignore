@@ -1,5 +1,7 @@
 .DS_Store
+admin
 node_modules
+admin
 /dist
 
 # local env files

@@ -11,8 +11,40 @@
 </template>
 
 <script>
+import { mapState,  mapMutations } from 'vuex'
+import dbase from '../assets/firebaseConfig/firebaseInit'
+import "firebase/database"
+import Cookies from 'js-cookie'
 export default {
-    name: "Success"
+    name: "Success",
+    props:{
+      id: String,
+    },
+    methods:{
+      ...mapMutations(['clearCart']),
+        deleteCurrentCart(){
+        const collectionId = Cookies.get('userId') || Cookies.get('collectionId');
+        console.log(Cookies.get('collectionId'))
+        const batch = dbase.batch();
+        for(var i = 0; i < this.cart.length; i++){
+          const rmv = dbase.collection(collectionId).doc(this.cart[i].documentId);
+          batch.delete(rmv);
+        }
+        batch.commit().then(
+          () => {
+            this.clearCart;
+            if(collectionId == Cookies.get('collectionId'))
+              Cookies.remove('collectionId');
+          }
+        );
+      },
+    },
+    created(){
+      this.deleteCurrentCart();
+    },
+  computed:{
+    ...mapState(['cart'])
+  }
 }
 </script>
 

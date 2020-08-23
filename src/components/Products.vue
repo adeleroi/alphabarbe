@@ -1,5 +1,6 @@
 <template>
   <div  class="products mobile">
+    <div class="loading" v-if="!getAllArticles.length">Loading...</div>
     <ul  class="products-list for-home">
       <li class="products-item"
         v-for="prod in articles"
@@ -97,6 +98,10 @@ a{
   color: black;
   font-weight: bold;
 }
+.loading{
+  font-weight: bold;
+  font-size: 18px;
+}
 @media only screen 
 and (min-device-width: 320px) 
 and (max-device-width: 614px)
@@ -111,8 +116,16 @@ and (-webkit-min-device-pixel-ratio: 2) {
   width: 90px;
 }
 .product-img.mobile{
-  width: 86px;
-  height: 209px;
+  width: 66px;
+  height: 179px;
+}
+.products-list{
+  /* display: grid; */
+  justify-content: space-evenly;
+  place-items: center;
+}
+.products-item{
+  margin: 0;
 }
 }
 </style>

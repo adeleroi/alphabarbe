@@ -145,10 +145,10 @@ export default {
       },
       checkoutSessionAndPayment(){
         console.log(this.getCartItems);
-        const promesse = fetch("http://localhost:3000/create-checkout-session", {
+        const promesse = fetch("https://stripeserverforkoutoukou.herokuapp.com/create-checkout-session", { 
           method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(this.getCartItems)
         })
@@ -208,18 +208,7 @@ export default {
 .cart-total.msge{
   margin-top: 30px;
 }
-/* .cart-checkout-btn{
-    background-color:#0077ed;
-    border: 0.5px solid #0077ed;
-    width: 120px;
-    height: 50px;
-    color: white;
-    font-size: 20px;    
-    justify-content: center;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 50px;
-} */
+
 .cart-checkout-btn{
   border: 0.5px solid #0077ed;
   width: 120px;

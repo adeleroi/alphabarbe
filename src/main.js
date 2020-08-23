@@ -4,7 +4,6 @@ import router from "./router";
 import store from "./store";
 import {mapState, mapMutations, mapActions} from 'vuex'
 Vue.config.productionTip = false;
-
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {
     el.event = function (event) {
