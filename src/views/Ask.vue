@@ -1,7 +1,7 @@
 <template>
   <div class="ask-container">
     <div class="ask-btn-yes-no">
-    <h2>Do you want to add the current cart's items to your cart?</h2>
+    <h2 class="ask-question">Do you want to add the current cart's items to your cart?</h2>
       <button class="ask-btn-yes" @click="addCurrentCartItems">yes</button>
       <button class="ask-btn-yes" @click="continueWithNewCart">
             <!-- <router-link :to="{
@@ -16,14 +16,16 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
 import dbase from '../assets/firebaseConfig/firebaseInit'
 import "firebase/database"
 import Cookies from 'js-cookie'
-import {v4 as uuidv4} from 'uuid'
 import {mapGetters, mapState, mapActions, mapMutations} from 'vuex'
 
 export default {
   name: "Ask",
+  
+  
   methods:{
     ...mapMutations({
       clearCart: 'clearCart'
@@ -31,38 +33,55 @@ export default {
       ...mapActions({
         retrieveUserInfo: "retrieveUserInfo"
       }),
+    
     addCurrentCartItems(){
-      const collectionId = this.getUid || Cookies.get('userId');
+      // const collectionId = this.getUid || Cookies.get('userId');
+      // const batch = dbase.batch();
+      // const tempColId = Cookies.get('collectionId');
+      // for(var i = 0; i < this.tempCart.length; i++){
+      //   const docId = uuidv4();
+      //   const rmv = dbase.collection(tempColId).doc(this.tempCart[i].documentId);
+      //   const ref = dbase.collection(collectionId).doc(docId);
+      //   batch.set(ref, this.tempCart[i]);
+      //   batch.delete(rmv);
+      // }
+      // batch.commit().then(
+      //   () => {
+      //     this.retrieveUserInfo();
+      //     this.tempCart = [];
+      //   }
+      // );
+  
+      const documentId = this.getUid || Cookies.get('userId');
       const batch = dbase.batch();
-      const tempColId = Cookies.get('collectionId');
-      for(var i = 0; i < this.tempCart.length; i++){
-        const docId = uuidv4();
-        const rmv = dbase.collection(tempColId).doc(this.tempCart[i].documentId);
-        const ref = dbase.collection(collectionId).doc(docId);
-        batch.set(ref, this.tempCart[i]);
-        batch.delete(rmv);
-      }
-      batch.commit().then(
-        () => {
-          this.retrieveUserInfo();
-          this.tempCart = [];
+      const ref = dbase.collection('cart').doc(documentId);
+      this.tempCart.forEach((el, index) => {
+        if(!index){
+          batch.set(ref, {items: [el]});
+        }else{
+          batch.update(ref, {items: firebase.firestore.FieldValue.arrayUnion(el)})
         }
-      );
+      })
+      batch.commit().then(() => {
+        this.retrieveUserInfo();
+      })
+      dbase.collection('cart').doc(Cookies.get('collectionId')).delete();
       Cookies.remove('collectionId');
       this.retrieveUserInfoAndCart;
       this.$router.push("/");
     },
+ 
     continueWithNewCart(){
       this.clearCart;
-      
       this.$router.push("/");
     }
   },
+
+
   computed:{
     ...mapState(['tempCart', 'cart']),
     ...mapGetters(['getCartCount', 'getCartItems', 'getUid'])
   },
-
 }
 </script>
 
@@ -97,5 +116,19 @@ export default {
 }
 .router-link-active.ask-no-btn{
   color: white;
+}
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 614px)
+
+and (-webkit-min-device-pixel-ratio: 2) {
+  .ask-question{
+    font-size: 14px;
+  }
+  .ask-btn-yes {
+    width: 40px;
+    height: 20px;
+    font-size: 12px
+  }
 }
 </style>

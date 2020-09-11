@@ -3,7 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import {mapState, mapMutations, mapActions} from 'vuex'
+
 Vue.config.productionTip = false;
+
 Vue.directive('click-outside', {
   bind: function (el, binding, vnode) {
     el.event = function (event) {
@@ -28,29 +30,35 @@ new Vue({
   router,
   store,
   render: h => h(App),
+
   data(){
     return {
       qty: 0,
       tempCart: new Set(),
     }
   },
+
+
   events:{
     closeEvent(){
       this.isActive = false;
     },
   },
+
+
   methods:{
     ...mapMutations(['addToCart']),
     ...mapActions(['retrieveArticles', 'retrieveCart', 'retrieveUserInfo']),
+  },
 
-  },
+
   computed: {
-    ...mapState(['articles', 'cart']),
+    ...mapState(['articles', 'cart', 'comments']),
   },
+
+
   created(){
     this.retrieveArticles();
     this.retrieveUserInfo();
-    // this.retrieveCart();
-
   }
 }).$mount("#app");

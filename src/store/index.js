@@ -28,6 +28,7 @@ export default new Vuex.Store({
     },
     fetchCart(currentState, payload){
         const found = currentState.cart.find(el => el.prodId === payload.prodId);
+        console.log("fetchCart")
         if(!found){
             currentState.cart.push(payload);
         }else{
@@ -43,12 +44,14 @@ export default new Vuex.Store({
         }
     },
     fetchComment(currentState, payload){
-        const found = currentState.comments.find(el => el.date === payload.date && el.username === payload.username);
-        if(!found){
-            currentState.comments.push(payload);
+        // console.log("payload ", payload)
+        const find = currentState.comments.filter(el => el.id === payload.id && el.comment === payload.comment)
+        if(find){
+           return
         }else{
-            found.comment = payload.comment;
+            currentState.comments.push(payload);
         }
+
     },
     updateCart(currentState, info){
       currentState.cartStatus = info;
@@ -174,23 +177,18 @@ export default new Vuex.Store({
         })
     },
     retrieveCart(context){
+        // context.dispatch("retrieveUserInfo")
         const toggle = context.state.username;
         const collectionId = toggle ? context.state.uid: Cookies.get('collectionId');
-        // console.log("retrieve cart called", toggle);
         if(collectionId){
-            // console.log('username',collectionId);
-            dbStore.collection(collectionId).onSnapshot(snap =>{
+            dbStore.collection("cart").onSnapshot(snap => {
                 let rawDocs = snap.docChanges();
                 rawDocs.forEach(rawDoc => {
-                    // console.log(rawDoc);
-                    if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
-                        let val = rawDoc.doc.data();
-                        const documentId = rawDoc.doc.id;
-                        val = {
-                            ...val,
-                            documentId,
-                        };
-                        context.commit('fetchCart', {...val});
+                    console.log(rawDoc.doc.id, " ", collectionId)
+                    if((rawDoc.type == 'added' || rawDoc.type == 'modified') && rawDoc.doc.id === collectionId){
+                        let cartArray = rawDoc.doc.data();
+                        console.log("retrieve cart... ", cartArray)
+                        cartArray.items.map(el => context.commit('fetchCart', {...el})) ///  A revoir
                     }
                 })
             })
@@ -199,18 +197,12 @@ export default new Vuex.Store({
     retrieveTempCart(context){
         if(Cookies.get('collectionId')){
             const collectionId = Cookies.get('collectionId');
-            dbStore.collection(collectionId).onSnapshot(snap =>{
+            dbStore.collection("cart").onSnapshot(snap =>{
                 let rawDocs = snap.docChanges();
                 rawDocs.forEach(rawDoc => {
-                    if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
-                        let val = rawDoc.doc.data();
-                        const documentId = rawDoc.doc.id;
-                        val = {
-                            ...val,
-                            documentId,
-                        };
-                        // console.log(val);
-                        context.commit('fetchTempCart', {...val});
+                    if((rawDoc.type == 'added' || rawDoc.type == 'modified') && rawDoc.doc.id === collectionId){
+                        let cartArray = rawDoc.doc.data();
+                        cartArray.items.map( el => context.commit('fetchTempCart', {...el}));
                     }
                 })
             })
@@ -219,7 +211,6 @@ export default new Vuex.Store({
     /*eslint-disable no-unused-vars*/
     retrieveUserInfo(context){
         firebase.auth().onAuthStateChanged(user => {
-            // console.log('retrieveUsername', user);
             if(user){
                 context.state.username = user.displayName;
                 context.state.emailaddress = user.email;
@@ -231,19 +222,25 @@ export default new Vuex.Store({
             }
             context.dispatch('retrieveCart');
         })
-    }
+    },
     /*eslint-unable no-unused-vars*/
-  },
-  retrieveReviews(context){
-    dbStore.collection("reviews").onSnapshot(snap => {
-        let rawDocs = snap.docChanges();
-        rawDocs.forEach(rawDoc => {
-            if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
-                let val = rawDoc.doc.data();
-                context.commit('fetchComment', {...val});
-            }
+    retrieveReviews(context, payload){
+        console.log(payload)
+        dbStore.collection("reviews").onSnapshot(snap => {
+            let rawDocs = snap.docChanges();
+            rawDocs.forEach(rawDoc => {
+                console.log("reviewsData ", rawDoc.doc.id, " ", payload)
+                if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
+                    if(rawDoc.doc.id === payload){
+                        let val = rawDoc.doc.data();
+                        console.log(val);
+                        val.commentsList.map(el => context.commit('fetchComment', {...el}));
+                    }
+                }
+            })
         })
-    })
-  },
+    },  
+},
+
   modules: {}
 });

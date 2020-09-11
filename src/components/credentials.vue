@@ -70,7 +70,7 @@ export default {
             showPasswordError: false,
             showUserNotFoundMsg: false,
             showNetworkErrorMsg: false,
-            baseUrl: 'setcustomclaims'/**http://localhost:4000/ */
+            baseUrl: 'http://localhost:4000/setcustomclaims'/**http://localhost:4000/ */
         }
     },
     methods:{

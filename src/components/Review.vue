@@ -20,7 +20,7 @@
                     <i class="review-user-icon icon-avatar"></i>
                     <span class="" style="display:flex; align-self: center;">{{review.username}}</span>
                 </div>
-                <span class="review-date">{{review.date.toDate().toString().slice(0,21)}}</span>
+                <!-- <span class="review-date">{{review.date.toDate().toString().slice(0,21)}}</span> -->
                 <div class="review-comment">
                     <div class="review-comment-container" :id="review.id.slice(6,30)">
                         <span class="review-comment-msg " role="textbox" :contenteditable="editContent"
@@ -55,24 +55,27 @@
   </div>
 </template>
 
+
 <script>
 import dbase from '../assets/firebaseConfig/firebaseInit'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import {mapGetters} from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import {v4 as uuidv4} from 'uuid'
 export default {
     name: "Review",
 
+
     props:{
         prodId: String,
     },
+
+
     data(){
         return {
             dispIcon: false,
             showReviewBtn: false,
             displayComment: false,
-            comment: String,
             commentsList: [],
             productReviews: [],
             editContent: false,
@@ -82,10 +85,13 @@ export default {
             cancel: false
         }
     },
-    methods:{
 
+
+    methods:{
         postComment(){
+            console.log("posting comment...")
             const span = document.querySelector(".review-container-msg");
+            console.log(span.innerHTML)
             if(span.innerHTML === ""){
                 return;
             }
@@ -94,41 +100,72 @@ export default {
                 id: reviewId,
                 prodId: this.prodId,
                 username: this.getUsername,
-                date: firebase.firestore.FieldValue.serverTimestamp(),
+                // date: firebase.firestore.FieldValue.serverTimestamp(),
                 comment: span.innerHTML,
                 stars: 0
             };
-            dbase.collection("reviews").doc(reviewId).set(data).then(cred => {
-                console.log(cred);
-            })
-            span.innerHTML = '';
+            if(this.commentsList.length){
+                dbase.collection("reviews").doc(this.prodId).update({
+                    commentsList: firebase.firestore.FieldValue.arrayUnion(data)
+                }).then(x => console.log("last review ", x))
+            }else{
+                dbase.collection("reviews").doc(this.prodId).set({commentsList:[data]})
+            }
+            this.commentsList =  [...this.commentsList, data]
             this.displayComment = false;
-            
         },
+
         updateComment(id){
             const span = document.getElementById(id)
             const comment = span.innerHTML;
-            // review.comment = comment;
             const reviewId = uuidv4();
             const data = {
                 id: reviewId,
                 prodId: this.prodId,
                 username: this.getUsername,
-                date: firebase.firestore.FieldValue.serverTimestamp(),
+                // date: firebase.firestore.FieldValue.serverTimestamp(),
                 comment: comment,
                 stars: 0
             };
-            dbase.collection("reviews").doc(reviewId).set(data)
-            // span.innerHTML = '';
-            // this.displayComment = false;
-            document.getElementById(id.slice(15,32)).remove();
+            let docRef = dbase.collection("reviews").doc(this.prodId);
+            docRef.get().then(snapShot => {
+                let itemToUpdate = snapShot.data().commentsList.find(item => item.id === id)
+                if(!itemToUpdate){
+                    return
+                }
+                itemToUpdate.comment = comment;
+                itemToUpdate.id = reviewId;
+                docRef.update({
+                    commentsList: [...snapShot.data().commentsList.filter(item => item.id !== id),
+                    itemToUpdate]
+                });
+                console.log("Comment updated!")
+            })
+            span.innerHTML = '';
+            this.displayComment = false;
+            const el = document.getElementById(id.slice(15,32));
+            el.remove();
+            this.commentsList =  [...this.commentsList, data]
+
         },
-        removeComment(docId){
-            
-            dbase.collection('reviews').doc(docId).delete()
-            const element = document.getElementById(docId.slice(15,32));
+
+        removeComment(id){
+            let docRef = dbase.collection('reviews').doc(this.prodId);
+            docRef.get().then(snapShot => {
+                let itemToUpdate = snapShot.data().commentsList.find(item => item.id === id);
+                if(!itemToUpdate){
+                    return;
+                }
+                docRef.update({
+                    commentsList: firebase.firestore.FieldValue.arrayRemove(itemToUpdate)
+                });
+                console.log('comment removed!')
+            })
+            const element = document.getElementById(id.slice(15,32));
             element.remove();
+            this.commentsList = this.commentsList.filter(el => el.id !== id)
         },
+
         edit(id){
             const id2 = id.slice(2,23);
             const id3 = id.slice(6,30);
@@ -147,8 +184,8 @@ export default {
             el4.classList.add('deactive');
             this.escapeMsg = id;
             this.cancel = true;
-        
         },
+
         toggleVisibility(id){
             const el = document.getElementById(id);
             if(el.style.display == "block"){
@@ -157,6 +194,7 @@ export default {
                 el.style.display = "block"
             }
         },
+
         escape(id, val=true){
             if(val){
                 const el = document.getElementById(id);
@@ -176,21 +214,28 @@ export default {
 
         retrieveReviews(){
             let list = [];
-            dbase.collection("reviews").where("prodId", "==", this.prodId)
+            dbase.collection("reviews").doc(this.prodId)
             .get()
-            .then(function(querySnapshot) {
-                querySnapshot.forEach(function(review){
-                    // console.log(review.data())
-                    list.push(review.data());
+            .then((querySnapshot) => {
+                if(!querySnapshot.data()){
+                    return
+                }
+                querySnapshot.data().commentsList.forEach((review) => {
+                    console.log(review)
+                    list.push(review);
                 })
+                this.commentsList = list
             })
-            this.commentsList = list;
         }
     },
+
 
     computed:{
         ...mapGetters({
             getUsername: 'getUsername'}),
+        ...mapState({
+            comments: "comments"
+        }),
         reviewMsg(){
             if(!this.displayComment)
                 return "Add review +"; 
@@ -199,28 +244,29 @@ export default {
 
  
     },
+
+
     watch:{
-        
-        prodId: function(){
-            let list = [];
-            dbase.collection("reviews").where("prodId", "==", this.prodId)
-            .get()
-            .then(function(querySnapshot) {
-                querySnapshot.forEach(function(review){
-                    // console.log(review.data())
-                    list.push(review.data());
+            prodId: function(){
+                this.commentsList = [];
+                dbase.collection('reviews').onSnapshot(snap => {
+                    let rawDocs = snap.docChanges();
+                    rawDocs.forEach(rawDoc => {
+                        if((rawDoc.type === 'added' || rawDoc.type === 'modified') && rawDoc.doc.id === this.prodId){
+                            let val = rawDoc.doc.data();
+                            console.log("retrieving reviews", val);
+                            this.commentsList = val.commentsList;
+                        }
+                    })
                 })
-            })
-            this.commentsList = list;
-        }
-                
-        
+            }
     },
+
+
     created(){
         if(this.getUsername){
             firebase.auth().currentUser.getIdTokenResult(true)
             .then(idTokenResult => {
-                // console.log('idTokenResult: ',idTokenResult.claims)
                 if(idTokenResult.claims.registered){
                     this.showReviewBtn = true;
                 }
@@ -230,28 +276,14 @@ export default {
             })
         }
     },
-    mounted(){
-        // dbase.collection("reviews").onSnapshot(snap => {
-        //     let rawDocs = snap.docChanges();
-        //     rawDocs.forEach(rawDoc => {
-        //         if(rawDoc.type == 'added' || rawDoc.type == 'modified'){
-        //             let val = rawDoc.doc.data();
-        //             const documentId = rawDoc.doc.id;
-        //             val = {
-        //                 ...val,
-        //                 documentId,
-        //             };
-        //             this.commentsList = [...this.commentsList.filter(el => el.id !== val.id), val];
-        //             this.commentsList = [...this.commentsList.filter(el => el.prodId === this.prodId)];
 
-        //         }
-        //     })
-        // });
+
+    mounted(){
         this.retrieveReviews();
     }
-
 }
 </script>
+
 
 <style >
 
@@ -271,7 +303,6 @@ export default {
 }
 .review-title{
     text-align: left;
-    /* margin-left: 30px; */
     margin-top: 0;
 }
 .review-btn-comments{
@@ -300,21 +331,16 @@ export default {
     position: absolute;
     left: 100px;
     top: 56px;
-    /* display: none; */
-    /* background-color: whitesmoke; */
-
 }
 .review-dots{
     display: flex;
     align-self: center;
     margin-left: 10px;
-    /* position: relative; */
 }
 .review-dots.deactive{
     display: none;
 }
 .review-display-items{
-    /* position: absolute; */
     display: flex;
     flex-direction: column;
     list-style: none;
@@ -337,14 +363,12 @@ export default {
     cursor: pointer;
 }
 .review-comment-msg{
-    /* display: flex; */
     border: 1px solid #ccc;
     border-radius: 25px;
     margin: 20px 0 20px 0;
     padding: 20px 10px 20px 10px;
     text-align: left;
     max-width: 400px;
-    /* outline: none; */
     min-width: 100px;
 }
 .review-comment-msg.review-container-msg{
@@ -358,7 +382,6 @@ export default {
     border: 1px solid #ccc;
     border-radius: 25px;
     margin: 20px 0 20px 0;
-    /* background-color: red; */
     padding-right: 25px;
 }
 .comment{
@@ -374,8 +397,6 @@ export default {
     margin-bottom: 6px;
     left: 19px
 }
-/********************** */
-
 .review-container{
   border: 1px solid  rgb(88, 86, 86);
   border-radius: 25px;
@@ -399,10 +420,8 @@ export default {
   display: block;
   width: 100%;
   overflow: hidden;
-  /* resize: right: ; */
   min-height: 40px;
   line-height: 20px;
-  
 }
 .review-container-msg[contenteditable]:empty::before {
   content: "Your comment ...";
@@ -414,14 +433,12 @@ export default {
     text-decoration: underline;
     cursor: pointer;
     color: purple;
-    /* line-height: 10px; */
     margin-bottom: 20px;
 }
 .icon-send{
     display: flex;
     align-self:flex-end;
     padding-bottom: 10px;
-    /* color: blue; */
     cursor: pointer;
 }
 /****************************************************************************** */
@@ -494,5 +511,4 @@ and (-webkit-min-device-pixel-ratio: 2) {
 .icon-cart:before {
   content: "\e93a";
 }
-
 </style>

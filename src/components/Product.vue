@@ -43,90 +43,124 @@ import Review from './Review'
 import {mapState, mapActions, mapMutations} from 'vuex'
 import Cookies from "js-cookie"
 import dbase from '../assets/firebaseConfig/firebaseInit'
+import firebase from 'firebase/app'
 import "firebase/database"
 import {v4 as uuidv4} from 'uuid'
 import products from './Products'
 export default {
     name: "Product",
+
+
     components:{
         Review,
         products,
     },
+
+
     data(){
         return {
             qty: 1,
         }
     },
+
+
     props:{
         productId: String,
     },
+
+
     methods:{
         ...mapActions({
             retrieveCart: "retrieveCart"
         }),
+
         ...mapMutations(['addToCart']),
+
         addCart(){
             let article = this.product;
+            console.log("article 1 ",article)
             article = {
                 ...article,
                 qty: this.qty,
             }
-            console.log(this.cart, article.prodId);
+            console.log("article ",article);
             const find = this.cart.find(el => 
                 el.prodId === article.prodId
             )
-            
             if(!Cookies.get('collectionId') && !Cookies.get('userId')){
-                const collectionId = uuidv4();
-                dbase.collection(collectionId).add(article).then(x => {
-                    if(x.id){
-                        Cookies.set('collectionId', collectionId, {expires: 7});
-                        this.retrieveCart();
-                    }
-                })
+                const uuid = uuidv4();
+                Cookies.set('collectionId', uuid, {expires: 7})
+                const docId = this.uid ? this.uid : Cookies.get("collectionId");
+                let docRef = dbase.collection("cart").doc(docId);
+                docRef.set({items:[article]})
             }else if(Cookies.get('collectionId') && !Cookies.get('userId')){
                 if(!find){
-                    dbase.collection(Cookies.get('collectionId')).add(article).then(x => {
-                        console.log('addToCart: ', x);
-                        this.retrieveCart();
-
-                    })
+                    let docRef = dbase.collection("cart").doc(Cookies.get('collectionId'));
+                    docRef.update({items: firebase.firestore.FieldValue.arrayUnion(article)})
                 }else{
-                    dbase.collection(Cookies.get('collectionId'))
-                    .doc(find.documentId).update({
-                        qty: Number(find.qty + this.qty)
-                    }).then(()=> {
-                        this.retrieveCart();
+                    console.log('Cookies:', Cookies.get('collectionId'))
+                    console.log('Retrieving cart document...')
+                    let docRef = dbase.collection("cart");
+                    docRef = docRef.doc(Cookies.get('collectionId'));
+                    docRef.get().then(snapshot => {
+                        let itemToUpdate = snapshot.data().items.find(item => item.prodId === find.prodId);
+                        if (!itemToUpdate) {
+                            console.log('Missing item in cart items list...');
+                            return;
+                        }
+                        itemToUpdate.qty = Number(itemToUpdate.qty) + 1;
+                        docRef.update({items: [
+                            ...snapshot.data().items.filter(item => item.prodId !== find.prodId),
+                            itemToUpdate
+                        ]});
+                        console.log('Item quantity updated!')
+                    })
+                    console.log(docRef)
+                }
+            } else if(Cookies.get('userId')){
+                if(!find && !this.cart.length){
+                    let docRef = dbase.collection("cart").doc(Cookies.get('userId'));
+                    docRef.set({items:[article]})
+                    
+                }else if(!find && this.cart.length){
+                    dbase.collection('cart').doc(Cookies.get('userId')).update({
+                        items: firebase.firestore.FieldValue.arrayUnion(article)
                     })
                 }
-            }else if(Cookies.get('userId')){
-                const collectionId = Cookies.get('userId');
-                if(!find){
-                    dbase.collection(collectionId).add(article).then(x => {
-                        console.log('article ajoute au panier de l utilisateur', x);
-                        this.retrieveCart();
+                else{
+                    console.log('Retrieving cart document...')
+                    let docRef = dbase.collection("cart");
+                    docRef = docRef.doc(Cookies.get('userId'));
+                    docRef.get().then(snapshot => {
+                        let itemToUpdate = snapshot.data().items.find(item => item.prodId === find.prodId);
+                        if (!itemToUpdate) {
+                            console.log('Missing item in cart items list... Registered user');
+                            return;
+                        }
+                        itemToUpdate.qty = Number(itemToUpdate.qty) + 1;
+                        docRef.update({items: [
+                            ...snapshot.data().items.filter(item => item.prodId !== find.prodId),
+                            itemToUpdate
+                        ]});
+                        console.log('Item quantity updated!  Registered user')
                     })
-                }else{
-                    dbase.collection(collectionId).doc(find.documentId).update({
-                        qty: Number(article.qty)
-                    }).then(() => {
-                        this.retrieveCart();
-                    })
+                    console.log(docRef)
                 }
             }
-            
             this.$router.push(`/categories/${article.name}/${article.prodId}`)
         }
     },
+
+
     computed:{
-        ...mapState(['articles', 'cart']),
+        ...mapState(['articles', 'cart', 'uid']),
         product(){
             return this.articles.find(el => el.prodId == this.productId);
         },
     },
-
 }
 </script>
+
 
 <style>
 .product-container{
@@ -134,8 +168,6 @@ export default {
     place-items: center;
 }
 .product{
-    /* display: flex;
-    justify-content: center; */
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
     margin-top: 150px;
     min-height: 532px;
@@ -147,12 +179,10 @@ export default {
 }
 .product-image-description{
     display: grid;
-    /* place-items: center; */
     grid-template-columns: auto auto;
     min-width: 300px;
     width: 850px;
 }
-
 /*************************************************************************** */
 @media only screen 
 and (min-device-width: 320px) 
@@ -175,7 +205,6 @@ and (-webkit-min-device-pixel-ratio: 2) {
     display: grid;
     place-items: center;
 }
-
 .product-name{
     display: flex;
     align-self: center;
@@ -189,7 +218,6 @@ and (-webkit-min-device-pixel-ratio: 2) {
     justify-content: center;
     margin-left: 189px;
 }
-
 .product-addtocart-btn {
     margin-left: 229px;
 }
@@ -317,8 +345,5 @@ and (-webkit-min-device-pixel-ratio: 2) {
     font-size: 14px;
     text-align: left;
     margin-right: 40%;
-    /* margin-left: 30%; */
 }
-
-
 </style>

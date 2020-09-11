@@ -86,21 +86,27 @@ import Cookies from "js-cookie"
 
 export default {
     name: "Navmenu",
+
+
     data(){
         return{
           isActive: false,
           showMenu: false,
         }
     },
+
+
     methods:{
       ...mapMutations(['clearCart']),
       ...mapActions({
         retrieveUserInfo: "retrieveUserInfo",
         retrieveCart: "retrieveCart"
       }),
+
       hide(){
         this.isActive = false;
       },
+
       hideMobileMenu(){
         if(window.innerWidth < 768){
         const navMenu = document.getElementsByClassName("navmobile");
@@ -109,6 +115,7 @@ export default {
         hamburgerActive[0].classList.remove("active");
         }
       },
+
       logOut(){
         firebase.auth().signOut().then(
           () => { 
@@ -116,12 +123,13 @@ export default {
             Cookies.remove('userId');
             this.retrieveUserInfo();
             this.clearCart();
-            // this.retrieveCart();
           }
         );
         this.$router.push('/login');
       }
     },
+
+
     computed: {
         ...mapGetters(["getCartCount", "getUsername"])
     },
@@ -138,7 +146,7 @@ export default {
     place-items: center;
     background-color:#24292e; /*rgb(104, 13, 104);*/
     font-family: Arial, Helvetica, sans-serif;
-    z-index: 2;
+    z-index: 5;
     opacity: .95;
 }
 .nav-items{
@@ -412,6 +420,9 @@ export default {
   }
   .nav-item.nav-logo.mobile{
     display: none;
+  }
+  .nav-user-section{
+    margin-right: 10px;
   }
 }
 /******************************************************************************* */

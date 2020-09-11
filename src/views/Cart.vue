@@ -7,8 +7,9 @@
         <p class="cart-total msge" v-else>The cart is empty</p>
         <button class="cart-checkout-btn" v-if="getTotal" @click="checkoutRedirect">
           <span class="checkout-btn-apple">checkout</span>
-          </button>
+        </button>
       </div>
+      <!-- <div class="loading" v-if="!cart.length && !getTotal">Loading...</div> -->
     </div>
     <div class="cart-products-presentation">
       <ul class="cart-products">
@@ -28,10 +29,10 @@
                 <div class="cart-option">
                   <select id="cart-item-quantity" v-model="product.qty" @change="addCart(product)">
                       <option disabled value="" >{{product.qty}}</option>
-                      <option >1</option>
-                      <option >2</option>
-                      <option >3</option>
-                      <option >4</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
                   </select>
                   <p class="cart-product-price" align="right">${{product.price * product.qty}}</p>
                 </div>
@@ -73,9 +74,9 @@
 <script>
 import { mapGetters, mapState, mapMutations} from 'vuex'
 import Cookies from "js-cookie"
+import firebase from 'firebase/app'
 import dbase from '../assets/firebaseConfig/firebaseInit'
 import "firebase/database"
-import {v4 as uuidv4} from 'uuid'
 /* eslint-disable no-undef */
 const stripe = Stripe("pk_test_dBcdfrU9L796gmsYfemRUozd00g7LiJ4CS")
 /* eslint-enable no-undef */
@@ -83,7 +84,7 @@ export default {
     name: "Cart",
     data(){
       return {
-        qty: '',
+        qty: 0,
 
       }
     },
@@ -91,58 +92,71 @@ export default {
       ...mapMutations(['removeOneProductFromCart', 'CartItems']),
 
       addCart(prod){
-          let article = prod;
-          article = {
-              ...article,
-              qty: Number(article.qty),
-          }
-          // console.log(this.cart, article.prodId);
-          const find = this.cart.find(el =>
-              el.prodId === article.prodId
+          const find = this.cart.find(el => 
+              el.prodId === prod.prodId
           )
-          if(!Cookies.get('collectionId') && !Cookies.get('userId')){
-              const collectionId = uuidv4();
-              dbase.collection(collectionId).add(article).then(x => {
-                  if(x.id){
-                      Cookies.set('collectionId', collectionId, {expires: 7});
+          console.log("find",find)
+          if(Cookies.get('collectionId') && !Cookies.get('userId')){
+              console.log('Cookies:', Cookies.get('collectionId'))
+              console.log('Retrieving cart document...')
+              let docRef = dbase.collection("cart");
+              docRef = docRef.doc(Cookies.get('collectionId'));
+              docRef.get().then(snapshot => {
+                  let itemToUpdate = snapshot.data().items.find(item => item.prodId === find.prodId);
+                  if (!itemToUpdate) {
+                      console.log('Missing item in cart items list...');
+                      return;
                   }
+                  itemToUpdate.qty = Number(prod.qty); // Number(itemToUpdate.qty)
+                  docRef.update({items: [
+                      ...snapshot.data().items.filter(item => item.prodId !== find.prodId),
+                      itemToUpdate
+                  ]});
+                  console.log('Item quantity updated!')
               })
-          }else if(Cookies.get('collectionId') && !Cookies.get('userId')){
-              if(!find){
-                  dbase.collection(Cookies.get('collectionId')).add(article).then(() => {
-                  })
-              }else{
-                  dbase.collection(Cookies.get('collectionId'))
-                  .doc(find.documentId).update({
-                      qty: Number(article.qty)
-                  })
-              }
+              console.log(docRef)
           }else if(Cookies.get('userId')){
-            const collectionId = Cookies.get('userId');
-            if(!find){
-              dbase.collection(collectionId).add(article).then(x => {
-                console.log('article ajoute au panier de l utilisateur', x)
+              console.log('Retrieving cart document...')
+              let docRef = dbase.collection("cart");
+              docRef = docRef.doc(Cookies.get('userId'));
+              docRef.get().then(snapshot => {
+                  let itemToUpdate = snapshot.data().items.find(item => item.prodId === find.prodId);
+                  if (!itemToUpdate) {
+                      console.log('Missing item in cart items list... Registered user');
+                      return;
+                  }
+                  itemToUpdate.qty = Number(prod.qty);
+                  docRef.update({items: [
+                      ...snapshot.data().items.filter(item => item.prodId !== find.prodId),
+                      itemToUpdate
+                  ]});
+                  console.log('Item quantity updated!  Registered user')
               })
-            }else{
-              dbase.collection(collectionId).doc(find.documentId).update({
-                qty: Number(article.qty)
-              })
-            }
+              console.log(docRef)
           }
-
-          this.showReviewCart = true;
       },
+
       remove(prod){
         const found = this.cart.find(el => {
           return el.prodId === prod.prodId;
         })
         const collectionId = this.getUserEmail? Cookies.get('userId'): Cookies.get('collectionId');
-        console.log(collectionId);
-        dbase.collection(collectionId)
-        .doc(found.documentId).delete();
-        this.removeOneProductFromCart(prod);
-        
+          let docRef = dbase.collection("cart");
+          docRef = docRef.doc(collectionId);
+          docRef.get().then(snapshot => {
+              let itemToUpdate = snapshot.data().items.find(item => item.prodId === found.prodId);
+              if (!itemToUpdate) {
+                  console.log('Missing item in cart items list... Registered user');
+                  return;
+              }
+              docRef.update({
+                items: firebase.firestore.FieldValue.arrayRemove(itemToUpdate)
+              });
+              console.log('Item removed  Registered user')
+          })
+          this.removeOneProductFromCart(prod);
       },
+
       checkoutSessionAndPayment(){
         console.log(this.getCartItems);
         const promesse = fetch("https://stripeserverforkoutoukou.herokuapp.com/create-checkout-session", { 
@@ -173,7 +187,9 @@ export default {
         getCartItems: "getCartItems",
         getUserEmail: "getUserEmail"
       }),
+
       ...mapState(['cart']),
+
       bagTotal(){
         return Number.parseFloat(this.getTotal + Number(this.getTaxTps) + Number(this.getTaxTvq)).toFixed(2);
       }
@@ -282,7 +298,10 @@ export default {
   list-style: none;
 }
 /*----------------------------------*/
-
+.loading{
+  margin-top: 34px;
+  font-size: 1.8rem;
+}
 .cart-product-image{
   margin-top: 20px; 
   margin-right: 20px;
