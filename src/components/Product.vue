@@ -74,7 +74,9 @@ export default {
             retrieveCart: "retrieveCart"
         }),
 
-        ...mapMutations(['addToCart']),
+        ...mapMutations({
+            addToCart: 'addToCart'
+        }),
 
         addCart(){
             let article = this.product;
@@ -87,16 +89,20 @@ export default {
             const find = this.cart.find(el => 
                 el.prodId === article.prodId
             )
-            if(!Cookies.get('collectionId') && !Cookies.get('userId')){
+            if(!Cookies.get('collectionId') && !this.uid){
+                // this.addToCart(article);
                 const uuid = uuidv4();
                 Cookies.set('collectionId', uuid, {expires: 7})
                 const docId = this.uid ? this.uid : Cookies.get("collectionId");
                 let docRef = dbase.collection("cart").doc(docId);
                 docRef.set({items:[article]})
-            }else if(Cookies.get('collectionId') && !Cookies.get('userId')){
+            }
+            else if(Cookies.get('collectionId') && !this.uid){
+                // this.addToCart(article);
                 if(!find){
                     let docRef = dbase.collection("cart").doc(Cookies.get('collectionId'));
                     docRef.update({items: firebase.firestore.FieldValue.arrayUnion(article)})
+
                 }else{
                     console.log('Cookies:', Cookies.get('collectionId'))
                     console.log('Retrieving cart document...')
@@ -117,20 +123,20 @@ export default {
                     })
                     console.log(docRef)
                 }
-            } else if(Cookies.get('userId')){
+            } else if(this.uid){
                 if(!find && !this.cart.length){
-                    let docRef = dbase.collection("cart").doc(Cookies.get('userId'));
+                    let docRef = dbase.collection("cart").doc(this.uid);
                     docRef.set({items:[article]})
                     
                 }else if(!find && this.cart.length){
-                    dbase.collection('cart').doc(Cookies.get('userId')).update({
+                    dbase.collection('cart').doc(this.uid).update({
                         items: firebase.firestore.FieldValue.arrayUnion(article)
                     })
                 }
                 else{
                     console.log('Retrieving cart document...')
                     let docRef = dbase.collection("cart");
-                    docRef = docRef.doc(Cookies.get('userId'));
+                    docRef = docRef.doc(this.uid);
                     docRef.get().then(snapshot => {
                         let itemToUpdate = snapshot.data().items.find(item => item.prodId === find.prodId);
                         if (!itemToUpdate) {
@@ -147,7 +153,8 @@ export default {
                     console.log(docRef)
                 }
             }
-            this.$router.push(`/categories/${article.name}/${article.prodId}`)
+            this.addToCart(article)
+            this.$router.push(`/categories/${article.name}/${article.prodId}`);
         }
     },
 

@@ -82,7 +82,7 @@
 import firebase from "firebase/app"
 import "firebase/auth"
 import {mapGetters, mapMutations, mapActions} from 'vuex'
-import Cookies from "js-cookie"
+// import Cookies from "js-cookie"
 
 export default {
     name: "Navmenu",
@@ -120,7 +120,7 @@ export default {
         firebase.auth().signOut().then(
           () => { 
             console.log("user signout")
-            Cookies.remove('userId');
+            // Cookies.remove('userId');
             this.retrieveUserInfo();
             this.clearCart();
           }
@@ -142,7 +142,6 @@ export default {
     width: 100%;
     top: 0;
     display: grid;
-    /* justify-content: space-around; */
     place-items: center;
     background-color:#24292e; /*rgb(104, 13, 104);*/
     font-family: Arial, Helvetica, sans-serif;
@@ -151,11 +150,7 @@ export default {
 }
 .nav-items{
     display: flex;
-    /* grid-template-columns: auto auto auto auto auto; */
-    /* flex-direction: row; */
     place-items: center;
-    /* justify-content: center; */
-    /* min-width: 900px; */
     height: 60px;
     color: white;
     background-color: #24292e;/* rgb(104, 13, 104);*/
@@ -207,7 +202,6 @@ export default {
   position: absolute;
   display: flex;
   right: 20px;
-  /* justify-content: left; */
   padding-left: 15px;
   top: 80px;
   background-color: #24292e/*rgb(104, 13, 104)*/;
@@ -249,7 +243,6 @@ export default {
   right: 20px;
   border: 1px solid #24292e/*rgb(104, 13, 104)*/;
   border-radius: 5px;
-  /* padding: 10px; */
   box-shadow: 2px 2px 10px #24292e/*rgb(104, 13, 104)*/;
   background-color: white;
 }
@@ -262,8 +255,6 @@ export default {
   line-height: 42px;
   align-self: center;
   list-style: none;
-  /* margin: 0; */
-  /* background-color: white; */
 }
 .nav-login-item:hover{
   background-color: #24292e/*rgb(104, 13, 104)*/;
@@ -292,14 +283,11 @@ export default {
   .hamburger {
     position: relative;
     left: 0;
-    /* margin-top: 18px; */
     display: block;
     justify-content: center;
-    /* margin-right: 18.45px; */
     width: 48px;
     height: 39px;
     transition: all .5s ease-in-out;
-    /* background: url(./pictures/hamburger.png); */
     z-index: 5;
   }
   .hamburgerline {
@@ -308,7 +296,6 @@ export default {
     width: 25px;
     height: 3px;
     background-color: white; /*#4B4A80*/
-    /* border: solid 1px; */
     transition: all .5s ease-in-out;
     transform: translateY(-50%);
   }
@@ -331,7 +318,6 @@ export default {
 
   .hamburger.active  .hamburgerline {
     background: transparent;
-    /* background-color: blue; */
   }
   .hamburger.active .hamburgerline::before {
     transform: rotate(45deg);

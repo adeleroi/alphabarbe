@@ -89,45 +89,44 @@ export default {
       }
     },
     methods:{
-      ...mapMutations(['removeOneProductFromCart', 'CartItems']),
+      ...mapMutations(['removeOneProductFromCart', 'CartItems', 'addToCart']),
 
       addCart(prod){
-          const find = this.cart.find(el => 
-              el.prodId === prod.prodId
-          )
-          console.log("find",find)
-          if(Cookies.get('collectionId') && !Cookies.get('userId')){
+          // const find = this.cart.find(el => 
+          //     el.prodId === prod.prodId
+          // )
+          console.log("find",prod)
+          if(Cookies.get('collectionId') && !this.uid){
               console.log('Cookies:', Cookies.get('collectionId'))
               console.log('Retrieving cart document...')
               let docRef = dbase.collection("cart");
               docRef = docRef.doc(Cookies.get('collectionId'));
               docRef.get().then(snapshot => {
-                  let itemToUpdate = snapshot.data().items.find(item => item.prodId === find.prodId);
+                  let itemToUpdate = snapshot.data().items.find(item => item.prodId === prod.prodId);
                   if (!itemToUpdate) {
                       console.log('Missing item in cart items list...');
                       return;
                   }
                   itemToUpdate.qty = Number(prod.qty); // Number(itemToUpdate.qty)
                   docRef.update({items: [
-                      ...snapshot.data().items.filter(item => item.prodId !== find.prodId),
+                      ...snapshot.data().items.filter(item => item.prodId !== prod.prodId),
                       itemToUpdate
                   ]});
                   console.log('Item quantity updated!')
               })
-              console.log(docRef)
-          }else if(Cookies.get('userId')){
+          }else if(this.uid){
               console.log('Retrieving cart document...')
               let docRef = dbase.collection("cart");
-              docRef = docRef.doc(Cookies.get('userId'));
+              docRef = docRef.doc(this.uid);
               docRef.get().then(snapshot => {
-                  let itemToUpdate = snapshot.data().items.find(item => item.prodId === find.prodId);
+                  let itemToUpdate = snapshot.data().items.find(item => item.prodId === prod.prodId);
                   if (!itemToUpdate) {
                       console.log('Missing item in cart items list... Registered user');
                       return;
                   }
                   itemToUpdate.qty = Number(prod.qty);
                   docRef.update({items: [
-                      ...snapshot.data().items.filter(item => item.prodId !== find.prodId),
+                      ...snapshot.data().items.filter(item => item.prodId !== prod.prodId),
                       itemToUpdate
                   ]});
                   console.log('Item quantity updated!  Registered user')
@@ -140,7 +139,7 @@ export default {
         const found = this.cart.find(el => {
           return el.prodId === prod.prodId;
         })
-        const collectionId = this.getUserEmail? Cookies.get('userId'): Cookies.get('collectionId');
+        const collectionId = this.getUserEmail? this.uid: Cookies.get('collectionId');
           let docRef = dbase.collection("cart");
           docRef = docRef.doc(collectionId);
           docRef.get().then(snapshot => {
@@ -188,7 +187,7 @@ export default {
         getUserEmail: "getUserEmail"
       }),
 
-      ...mapState(['cart']),
+      ...mapState(['cart', 'uid']),
 
       bagTotal(){
         return Number.parseFloat(this.getTotal + Number(this.getTaxTps) + Number(this.getTaxTvq)).toFixed(2);

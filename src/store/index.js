@@ -6,6 +6,8 @@ import firebase from "firebase/app"
 import "firebase/auth" 
 // import "firebase/firestore"
 import Cookies from 'js-cookie'
+// import {v4 as uuidv4} from 'uuid'
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -19,7 +21,7 @@ export default new Vuex.Store({
   showReviewCart: false,
   username: '',
   emailaddress: '',
-  uid: ''
+  uid: null,
   },
   mutations: {
     fetchArticles(currentState, payload){
@@ -28,7 +30,7 @@ export default new Vuex.Store({
     },
     fetchCart(currentState, payload){
         const found = currentState.cart.find(el => el.prodId === payload.prodId);
-        console.log("fetchCart")
+        console.log("fetchCart", payload)
         if(!found){
             currentState.cart.push(payload);
         }else{
@@ -63,12 +65,12 @@ export default new Vuex.Store({
     },
 
     addToCart(currentState, item){
-        const found = currentState.cart.find(el => {
-            el.id == item.id;
-        })
-        if(found){
-            found.qty += item.qty;
+        // item.qty = Number(item.qty) // because product.qty in cart.vue is type string
+        const index = currentState.cart.findIndex(el => el.prodId == item.prodId);
+        if(index != -1){
+            currentState.cart[index].qty += Number(item.qty);
         }else{
+            console.log('push item...')
             currentState.cart.push(item);
         }
     },
@@ -82,7 +84,7 @@ export default new Vuex.Store({
         if(currentState[index].qty){
             currentState[index].qty ++;
         }else{
-            currentState.cart.splice(index, 1);
+            currentState.cart.push(item);
         }
     },
 
@@ -107,13 +109,13 @@ export default new Vuex.Store({
         if(!state.cart.length){
             return 0;
         }
-        return state.cart.reduce((ac, next) => ac + next.qty, 0);
+        return state.cart.reduce((ac, next) => ac + Number(next.qty), 0);
     },
     getCartTotal(state){
         if(!state.cart.length){
             return 0;
         }
-        return state.cart.reduce((acc, curr) => acc + curr.qty * curr.price, 0);
+        return state.cart.reduce((acc, curr) => acc + Number(curr.qty) * curr.price, 0);
     },
     getTaxTvq(state, getters){
         return Number.parseFloat(getters.getCartTotal * 0.09975).toFixed(2);
@@ -177,7 +179,6 @@ export default new Vuex.Store({
         })
     },
     retrieveCart(context){
-        // context.dispatch("retrieveUserInfo")
         const toggle = context.state.username;
         const collectionId = toggle ? context.state.uid: Cookies.get('collectionId');
         if(collectionId){

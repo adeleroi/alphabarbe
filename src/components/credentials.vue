@@ -12,20 +12,20 @@
         <img src="../assets/product-foragers-keep.png" alt="" class="signup-img mobile">
         <form action="" class="signup-form-data" @submit.prevent="connect">
             <label for="" class="signup-title" v-if="login">What's your name?</label>
-            <input type="text" placeholder="Enter you name" v-model.lazy="name" class="signup-username signform" @blur="nameCheck" v-if="login">
+            <input type="text" placeholder="Enter you name" required v-model.lazy="name" class="signup-username signform" @blur="nameCheck" v-if="login">
             <label for="" class="signup-title error" v-if="showNameError">Your name is invalid.</label>
             <label for="" class="signup-title">What's your email?</label>
-            <input type="text" placeholder="Enter you email" v-model.lazy="email" class="signup-username signform" @blur="emailCheck" @focus="hideError">
+            <input type="text" placeholder="Enter you email" required v-model.lazy="email" class="signup-username signform" @blur="emailCheck" @focus="hideError">
             <label for="" class="signup-title" v-if="login">What's should we call you?</label>
-            <input type="text" placeholder="Enter a username" v-model.lazy="username" class="signup-username signform" @blur="emailCheck" @focus="hideError" v-if="login">
+            <input type="text" placeholder="Enter a username" required v-model.lazy="username" class="signup-username signform" @blur="emailCheck" @focus="hideError" v-if="login">
             <label for="" class="signup-title error" v-if="showSignupError">This email is already in use.</label>
             <label for="" class="signup-title error" v-if="showEmailError">Your email is invalid.</label>
             <label for="" class="signup-title" v-if="login">Create a password</label>
             <label for="" class="signup-title" v-if="!login">Password</label>
-            <input type="password" placeholder="Enter a password" v-model.lazy="password" class="signup-password signform" @focus="hideError">
+            <input type="password" placeholder="Enter a password" required v-model.lazy="password" class="signup-password signform" @focus="hideError">
             <label for="" class="signup-title error" v-if="showWeakPassMsg">Password should be at least 6 characters</label>
             <label for="" class="signup-title" v-if="login">Confirm your password</label>
-            <input type="password" placeholder="Confirm password" v-model.lazy="confirmPass" class="signup-password signform" @blur="passwordCheck" @focus="hideError" v-if="login">
+            <input type="password" placeholder="Confirm password" required v-model.lazy="confirmPass" class="signup-password signform" @blur="passwordCheck" @focus="hideError" v-if="login">
             <label for="" class="signup-title error" v-if="showPasswordError">The passwords don't match.</label>
             <label for="" class="signup-title error" v-if="showUserNotFoundMsg">Incorrect email or password.</label>
             <label for="" class="signup-title error" v-if="showNetworkErrorMsg">Network error. Interrupted connection.</label>
@@ -47,15 +47,20 @@
 
 <script>
 import firebase from "firebase/app"
+// import dbase from '../assets/firebaseConfig/firebaseInit'
 import "firebase/auth" 
 import "firebase/firestore"
-import Cookies from "js-cookie"
-import {mapState, mapGetters, mapActions} from "vuex"
+// import Cookies from "js-cookie"
+import {mapState, mapGetters, mapActions, mapMutations} from "vuex"
 export default {
     name: "Signup",
+
+
     props: {
         login: Boolean
     },
+
+
     data(){
         return {
             name: '',
@@ -70,10 +75,13 @@ export default {
             showPasswordError: false,
             showUserNotFoundMsg: false,
             showNetworkErrorMsg: false,
-            baseUrl: 'http://localhost:4000/setcustomclaims'/**http://localhost:4000/ */
+            baseUrl: '/setcustomclaims'/**http://localhost:4000/ */
         }
     },
+
+
     methods:{
+
         ...mapActions(
             {
                 retrieveUserInfo: "retrieveUserInfo",
@@ -81,20 +89,30 @@ export default {
                 retrieveCart: "retrieveCart"
             }
         ),
+
+        ...mapMutations(
+            {
+                clearCart: 'clearCart',
+            }
+        ),
+
         isNameValid(value){
             /*eslint-disable no-useless-escape*/
             const regex = /^[a-zA-Z\-' ]+$/;
             console.log(regex.test(value));
             return regex.test(value);
         },
+
         isEmailValid(value){
             /*eslint-disable no-useless-escape*/
             const regex =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
             return regex.test(value)
         },// ID: this.id
+
         isPasswordValid(){
             return this.password === this.confirmPass;
         },
+
         nameCheck(){
             if(!this.isNameValid(this.name)){
                 this.showNameError = true;
@@ -102,6 +120,7 @@ export default {
                 this.showNameError = false;
             }
         },
+
         emailCheck(){
             if(!this.isEmailValid(this.email)){
                 this.showEmailError = true;
@@ -109,6 +128,7 @@ export default {
                 this.showEmailError = false;
             }
         },
+
         passwordCheck(){
             if(!this.isPasswordValid()){
                 this.showPasswordError = true;
@@ -116,15 +136,15 @@ export default {
                 this.showPasswordError = false;
             }
         },
+
         hideError(){
             this.showPasswordError, this.showWeakPassMsg, this.showSignupError = false;
         },
+
         signUp(){
             if(!this.showNameError && !this.showEmailError && !this.showPasswordError){
                 firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then(cred => {
-                    if(cred.user.uid)
-                        Cookies.set('userId', cred.user.uid, {expires: 365});
                     return cred.user.updateProfile({
                         displayName: this.username,
                         emailVerified: true
@@ -142,14 +162,14 @@ export default {
                 })
             }
         },
+
         logIn(){
             if(!this.showEmailError){
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then(cred => {
-                    Cookies.set('userId', cred.user.uid, {expires: 365})
                     this.retrieveTempCart();
+                    this.clearCart();
                     this.retrieveUserInfo();
-                    // this.retrieveCart();
                     return cred.user.getIdToken();
                 })
                 .then(idToken => {
@@ -167,6 +187,7 @@ export default {
                     .then(data => {
                         if(data.status == "success"){
                             firebase.auth().currentUser.getIdToken(true);
+                            console.log("check if tempCart have some objects...")
                             if(this.tempCart.length){
                                 this.$router.push("/ask");
                             }else{
@@ -184,6 +205,7 @@ export default {
                 })
             }
         },
+
         connect(){
             if(!this.login){
                 return this.logIn();
@@ -192,10 +214,13 @@ export default {
             }
         }
     },
+
+
     computed:{
         ...mapState({
             cart:'cart',
-            tempCart: 'tempCart'
+            tempCart: 'tempCart',
+            uid: 'uid'
             }),
         ...mapGetters({
             getCartCount:'getCartCount'})
@@ -211,7 +236,6 @@ export default {
     width: 100%;
     height: 100%;
     background-color: white;
-    /* background: linear-gradient(to bottom right,  #333028, purple); */
     z-index: 20;
 }
 .signup__header-logo{
@@ -302,7 +326,6 @@ and (-webkit-min-device-pixel-ratio: 2) {
     display: none;
 }
 .signup-form-data{
-    /* padding-left: 10%; */
     display: grid;
     place-items: center;
 }

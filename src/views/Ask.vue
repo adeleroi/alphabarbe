@@ -35,44 +35,31 @@ export default {
       }),
     
     addCurrentCartItems(){
-      // const collectionId = this.getUid || Cookies.get('userId');
-      // const batch = dbase.batch();
-      // const tempColId = Cookies.get('collectionId');
-      // for(var i = 0; i < this.tempCart.length; i++){
-      //   const docId = uuidv4();
-      //   const rmv = dbase.collection(tempColId).doc(this.tempCart[i].documentId);
-      //   const ref = dbase.collection(collectionId).doc(docId);
-      //   batch.set(ref, this.tempCart[i]);
-      //   batch.delete(rmv);
-      // }
-      // batch.commit().then(
-      //   () => {
-      //     this.retrieveUserInfo();
-      //     this.tempCart = [];
-      //   }
-      // );
-  
       const documentId = this.getUid || Cookies.get('userId');
       const batch = dbase.batch();
       const ref = dbase.collection('cart').doc(documentId);
       this.tempCart.forEach((el, index) => {
-        if(!index){
+        if(!index && !this.cart.length){
+          console.log("je set")
           batch.set(ref, {items: [el]});
         }else{
+          console.log("j'update")
           batch.update(ref, {items: firebase.firestore.FieldValue.arrayUnion(el)})
         }
       })
       batch.commit().then(() => {
         this.retrieveUserInfo();
       })
-      dbase.collection('cart').doc(Cookies.get('collectionId')).delete();
+      dbase.collection('cart').doc(Cookies.get('collectionId')).delete().then((x) => {
+        console.log("deleting...", x);
+      });
       Cookies.remove('collectionId');
       this.retrieveUserInfoAndCart;
       this.$router.push("/");
     },
  
     continueWithNewCart(){
-      this.clearCart;
+      // this.clearCart;
       this.$router.push("/");
     }
   },
