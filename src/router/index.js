@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import store from "../store";
+import Cookies from 'js-cookie';
 
 Vue.use(VueRouter);
 
@@ -49,7 +51,8 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     props: true,
     component: () =>
-      import(/* webpackChunkName: "ask" */ "../views/Ask.vue")
+      import(/* webpackChunkName: "ask" */ "../views/Ask.vue"),
+    meta: { requiresAuth: true }
   },
   {
     path: "/success/:id",
@@ -85,5 +88,17 @@ const router = new VueRouter({
   routes
 });
 
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)){
+    if(store.state.uid && Cookies.get('collectionId')){
+      next();
+    }else{ 
+      console.log("from will")
+      router.push(from.fullPath)
+    }
+  }else{
+    next(); // continue with the regular flow;
+  }
+})
 
 export default router;
